@@ -8,7 +8,7 @@ import (
 
 var urls = []string{
 	"https://golang.org/",
-	"https://bitbucket.org/layer3tv/",
+	"https://medium.com/",
 	"https://www.rust-lang.org/",
 }
 
