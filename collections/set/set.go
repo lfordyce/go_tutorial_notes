@@ -4,7 +4,7 @@ type (
 	Set struct {
 		hash map[interface{}]nothing
 	}
-	nothing struct {}
+	nothing struct{}
 )
 
 func New(initial ...interface{}) *Set {
@@ -17,10 +17,10 @@ func New(initial ...interface{}) *Set {
 }
 
 // Find the difference of the two sets
-func (this *Set) Difference(set *Set) *Set {
+func (s *Set) Difference(set *Set) *Set {
 	n := make(map[interface{}]nothing)
 
-	for k := range this.hash {
+	for k := range s.hash {
 		if _, exists := set.hash[k]; !exists {
 			n[k] = nothing{}
 		}
@@ -29,25 +29,25 @@ func (this *Set) Difference(set *Set) *Set {
 }
 
 // Call f for each item in the set
-func (this *Set) Do(f func(interface{})) {
-	for k := range this.hash {
+func (s *Set) Do(f func(interface{})) {
+	for k := range s.hash {
 		f(k)
 	}
 }
 
-func (this *Set) Has(element interface{}) bool {
-	_, exists := this.hash[element]
+func (s *Set) Has(element interface{}) bool {
+	_, exists := s.hash[element]
 	return exists
 }
 
-func (this *Set) Insert(element interface{}) {
-	this.hash[element] = nothing{}
+func (s *Set) Insert(element interface{}) {
+	s.hash[element] = nothing{}
 }
 
-func (this *Set) Intersection(set *Set) *Set {
+func (s *Set) Intersection(set *Set) *Set {
 	n := make(map[interface{}]nothing)
 
-	for k := range this.hash {
+	for k := range s.hash {
 		if _, exists := set.hash[k]; exists {
 			n[k] = nothing{}
 		}
@@ -55,7 +55,6 @@ func (this *Set) Intersection(set *Set) *Set {
 	return &Set{n}
 }
 
-func (this *Set) Len() int {
-	return len(this.hash)
+func (s *Set) Len() int {
+	return len(s.hash)
 }
-

@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:cablelabs:md:xsd:content:3.0" xmlns:core="urn:cablelabs:md:xsd:core:3.0" targetNamespace="urn:cablelabs:md:xsd:content:3.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1">
+	<xsd:import namespace="urn:cablelabs:md:xsd:core:3.0" schemaLocation="MD-SP-CORE-I02.xsd"/>
+	<xsd:simpleType name="SourceUrlType">
+		<xsd:annotation>
+			<xsd:documentation>A URL to the content, which in ADI1.1 corresponds to a relative URL of just the content file name.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:anyURI"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="ChecksumType">
+		<xsd:annotation>
+			<xsd:documentation>32-character hexadecimal string.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[0-9A-Fa-f]{32}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="AudioTypeType">
+		<xsd:annotation>
+			<xsd:documentation>A value representing an audio track. The value should come from one of the predefined choices (defined in the pattern) or prefixed with "private:".</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="(Dolby ProLogic|Dolby Digital|Stereo|Mono|Dolby 5.1|private:.+)"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="AnalogProtectionSystemType">
+		<xsd:restriction base="xsd:unsignedByte">
+			<xsd:enumeration value="0"/>
+			<xsd:enumeration value="1"/>
+			<xsd:enumeration value="2"/>
+			<xsd:enumeration value="3"/>
+			<!-- 0: Analog protection off -->
+			<!-- 1: AGC process on, split burst off -->
+			<!-- 2: AGC process on, 2-line split burst on -->
+			<!-- 2: AGC process on, 4-line split burst on -->
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="EncryptionModeIndicatorType">
+		<xsd:restriction base="xsd:unsignedByte">
+			<xsd:enumeration value="0"/>
+			<xsd:enumeration value="1"/>
+			<xsd:enumeration value="2"/>
+			<xsd:enumeration value="3"/>
+			<!-- 0: Copying is permitted -->
+			<!-- 1: No further copying is permitted -->
+			<!-- 2: One generation copy is permitted -->
+			<!-- 3: Copying is prohibited -->
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ConstrainedImageTriggerType">
+		<xsd:restriction base="xsd:unsignedByte">
+			<xsd:enumeration value="0"/>
+			<xsd:enumeration value="1"/>
+			<!-- 0: No image constraint asserted -->
+			<!-- 1: Image constraint required -->
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="CGMSAType">
+		<xsd:restriction base="xsd:unsignedByte">
+			<xsd:enumeration value="0"/>
+			<xsd:enumeration value="1"/>
+			<xsd:enumeration value="2"/>
+			<xsd:enumeration value="3"/>
+			<!-- 0: Copying is permitted without restriction -->
+			<!-- 1: No further copying permitted -->
+			<!-- 2: One generation of copies may be made -->
+			<!-- 3: No copying it permitted -->
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ScreenFormatType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="(Standard|Widescreen|Letterbox|OAR|private:.+)"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ResolutionType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="(480i|720p|1080i|1080p|private:.+)"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="FrameRateType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="(24|30|60|private:\d+)"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="CodecType">
+		<xsd:annotation>
+			<xsd:documentation>Video codec, one of:
+			MPEG2:  SD and HD MPEG-2 as specified in OC-SP-CEP3.0-I02-110131 
+			AVC MP@L30:  H.264/MPEG-4 AVC, Main Profile, Level 3
+			AVC MP@L40:  H.264/MPEG-4 AVC, Main Profile, Level 4
+			AVC MP@L42:  H.264/MPEG-4 AVC, Main Profile, Level 4.2
+			AVC HP@L30: H.264/MPEG-4 AVC, High Profile, Level 3
+			AVC HP@L40: H.264/MPEG-4 AVC, High Profile, Level 4
+			AVC HP@L42: H.264/MPEG-4 AVC, High Profile, Level 4.2
+			MPEG4-MVC:  MPEG4 Multiview Video Coding (Blu-ray Disc  Association)
+		</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="(MPEG2|AVC MP@L30| AVC MP@L40|AVC MP@L42|AVC HP@L30|AVC HP@L40|AVC HP@L42|MPEG4-MVC|private :.+)"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="PropagationPriorityType">
+		<xsd:annotation>
+			<xsd:documentation>An integer from 1 (high) to 10 (low) that can be used to assist with determining the priority of propagation within the service provider network. NOTE: This value is set within a Provider/Product, therefore it cannot be used to compare assets outside of that group.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:minInclusive value="1"/>
+			<xsd:maxInclusive value="10"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="EncryptionInfoType">
+		<xsd:annotation>
+			<xsd:documentation>Describes an encrypted asset.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="VendorName" type="core:NonEmptyStringType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>The name of the vendor defining the format under which this asset is recognized.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ReceiverType" type="core:NonEmptyStringType">
+				<xsd:annotation>
+					<xsd:documentation>A string identifying the network or receiving system for which this encrypted file is targeted.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ReceiverVersion" type="xsd:unsignedInt" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Version of the network or receiving system.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Encryption" type="core:NonEmptyStringType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Further identification of the encryption type (e.g. "symmetric", "public key").</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="EncryptionAlgorithm" type="core:NonEmptyStringType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Further identification of the encryption type (e.g. DES, 3DES, RC5).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="EncryptionDateTime" type="xsd:dateTime" minOccurs="0"/>
+			<xsd:element name="EncryptionSystemInfo" type="core:NonEmptyStringType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Information pertaining to the encrypting system.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="EncryptionKeyBlock" type="core:NonEmptyStringType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>As needed by the decryption. Generated by encryption system (data from encryption system).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="CopyControlInfoType">
+		<xsd:sequence>
+			<xsd:element name="IsCopyProtection" type="xsd:boolean" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Indication that copy protection is required.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="IsCopyProtectionVerbose" type="xsd:boolean" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>If asserted (true) then all four (APS, EMI, CIT and CGMS-A) copy protection fields MUST be included.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="AnalogProtectionSystem" type="AnalogProtectionSystemType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>An integer representing the value of APS.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="EncryptionModeIndicator" type="EncryptionModeIndicatorType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>An integer representing the value of EMI.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ConstrainedImageTrigger" type="ConstrainedImageTriggerType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>An integer representing the value of CIT.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="CGMS_A" type="CGMSAType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>An integer representing the value of the Copy Generation Management System (analog).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="RequiresOutputControl" type="xsd:boolean" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Selectable Output Control flag - true indicates that output control is required - false indicates that no output control is asserted.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ContentAssetType">
+		<xsd:complexContent>
+			<xsd:extension base="core:AssetType">
+				<xsd:sequence>
+					<xsd:element name="POGroupRef" type="core:EffectiveAssetRefType" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>One or more refences to PO  Groups that apply to the content.
+
+NOTE: PO groups contain references to signal regions and/or points. Each referenced point or region must exist in one and only one SignalGroupRef included with this asset.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="SignalGroupRef" type="core:AssetRefType" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>One or more references to SignalGroup defining points and/or regions for this content. The specific applicaiton of a point or region is based on other metadata construncts (ex. PO point or region)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="SourceUrl" type="SourceUrlType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>A URL to the content, which ni ADI1.1 corresponds to a relatative URL of just the content file name.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ContentFileSize" type="xsd:unsignedLong" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>File size (in bytes) of the included content for quality assurance and processing.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ContentCheckSum" type="ChecksumType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>A string containing a hexadecimal number representing a MD5 (RFC 1321) message digest value for quality assurance.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="PropagationPriority" type="PropagationPriorityType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>An integer from 1 (high) to  10 (low) that can be used to determine the priority of propagation within an MSO network.  Note: This value is only relative within a provider.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ContentRef" type="xsd:anyURI" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>URI to the Content on the AMS</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="MediaType" type="core:NonEmptyStringType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>The media type of the content as define in RFC 2616, section 3.7.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- AudioVideoAssetType serves as a mid-level type for all movie type assets -->
+	<xsd:complexType name="AudioVideoAssetType">
+		<xsd:complexContent>
+			<xsd:extension base="ContentAssetType">
+				<xsd:sequence>
+					<xsd:element name="AudioType" type="AudioTypeType" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>Audio Types available for this content.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ScreenFormat" type="ScreenFormatType" minOccurs="0"/>
+					<xsd:element name="Resolution" type="ResolutionType" minOccurs="0"/>
+					<xsd:element name="FrameRate" type="FrameRateType" minOccurs="0"/>
+					<xsd:element name="Codec" type="CodecType" minOccurs="0"/>
+					<xsd:element name="AVContainer" type="AVContainerType" minOccurs="0"/>
+					<xsd:element name="BitRate" type="xsd:integer" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>The maximum overall bit rate of the included content in bits per second (bps).</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="AlternateBitRateResolution" type="BitRateResolutionType" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>Pairs of alternate bitrate/resolution values (adaptive streaming).</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="Duration" type="xsd:duration" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Overall runtime of the AV asset.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="Language" type="core:LanguageType" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>Available languages. Note: Audio PID(s) shall correspond with languages.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="SubtitleLanguage" type="core:LanguageType" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>Language(s) of sub-titles.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="DubbedLanguage" type="core:LanguageType" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>Available dubbed languages - absent if not dubbed.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="Rating" type="core:RatingType" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>Optional values to indicate the specified rating.  Overrides the set of values in the Title for this content asset.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="Audience" type="core:AudienceType" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>Optional values to indicate target audience.  Overrides the set of values in the Title for this content asset.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="EncryptionInfo" type="EncryptionInfoType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Presence of this element indicates that encryption is required.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CopyControlInfo" type="CopyControlInfoType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Presence of this element indicates that copy protection is enabled.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<!-- IsResumeEnabled and TrickModesRestricted are Terms but must be on movie for CL1.1 -->
+					<xsd:element name="IsResumeEnabled" type="xsd:boolean" minOccurs="0"/>
+					<xsd:element name="TrickModesRestricted" type="core:TrickModeRestrictionType" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="TrickRef" type="core:AssetRefType" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>Multiple trick files are typically associated with an AudioVideoAsset to support variation in BitRate/TrickMode as well as VendorName/VendorProduct/ForVersion.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ThreeDMode" type="xsd:integer" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- StillImageContentType serves as a mid-level type for all image type assets -->
+	<xsd:complexType name="StillImageAssetType">
+		<xsd:annotation>
+			<xsd:documentation>A base type for still image assets.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="ContentAssetType">
+				<xsd:sequence>
+					<xsd:element name="X_Resolution" type="xsd:unsignedInt" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Number of pixels that can be resolved from one side of an image to the other.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="Y_Resolution" type="xsd:unsignedInt" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>The number of pixels that can be resolved from the top of an image to the bottom.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="Language" type="core:LanguageType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>A value that allows the image to be associated with a language. This might be useful if the image contins text. Language is assumed to be neutral or english if the element is omitted.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="Codec" type="ImageCodecType" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- Low-level types define specific kinds of content -->
+	<xsd:complexType name="MovieType">
+		<xsd:complexContent>
+			<xsd:extension base="AudioVideoAssetType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="PreviewType">
+		<xsd:complexContent>
+			<xsd:extension base="AudioVideoAssetType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="BarkerType">
+		<xsd:complexContent>
+			<xsd:extension base="AudioVideoAssetType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="TrickType">
+		<xsd:annotation>
+			<xsd:documentation>Describes a trick-play asset.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="ContentAssetType">
+				<xsd:sequence>
+					<xsd:element name="BitRate" type="xsd:integer">
+						<xsd:annotation>
+							<xsd:documentation>The maximum overall bit rate of the included content in kbs.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="VendorName" type="core:NonEmptyStringType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>The name of the vendor defining the format under which this asset is recognized.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="VendorProduct" type="core:NonEmptyStringType">
+						<xsd:annotation>
+							<xsd:documentation>A value identifying the video server product under which this trick file format is used.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ForVersion" type="core:NonEmptyStringType">
+						<xsd:annotation>
+							<xsd:documentation>The version associated with either the VendorProduct or the TrickMode, as arranged, in order to assure correct processing of the file.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="TrickMode" type="core:NonEmptyStringType">
+						<xsd:annotation>
+							<xsd:documentation>Specific trick mode or file type.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="BoxCoverType">
+		<xsd:complexContent>
+			<xsd:extension base="StillImageAssetType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="PosterType">
+		<xsd:complexContent>
+			<xsd:extension base="StillImageAssetType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="ThumbnailType">
+		<xsd:complexContent>
+			<xsd:extension base="StillImageAssetType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="ContentRefListType">
+		<xsd:annotation>
+			<xsd:documentation>List of URI to Content on the AMS.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="ContentRef" type="xsd:anyURI" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="Movie" type="MovieType"/>
+	<xsd:element name="Preview" type="PreviewType"/>
+	<xsd:element name="Barker" type="BarkerType"/>
+	<xsd:element name="Trick" type="TrickType"/>
+	<xsd:element name="Poster" type="PosterType"/>
+	<xsd:element name="BoxCover" type="BoxCoverType"/>
+	<xsd:element name="Thumbnail" type="ThumbnailType"/>
+	<xsd:element name="ContentRefList" type="ContentRefListType"/>
+	<xsd:simpleType name="AVContainerType">
+		<xsd:annotation>
+			<xsd:documentation>AudioVideo container, one of:
+			M2T:  MPEG2 Transport as specified in OC-SP-CEP3.0-I02-110131  
+			MP4:  MPEG4 Part 14 (ISO/IEC 14496-14:2003)
+			ASF:  Microsoft Advance Systems Format
+			3GP:  ETSI Third Generation Partnership Project (3GPP) 
+			AVI:  Microsoft Audio Video Interleave
+			MSSmoothStreaming: Microsoft Smooth Streaming 
+			LiveStreaming:  HTTP Live Streaming (RFC2119)
+			F4M:  Adobe Flash Media manifest
+			DASH:   MPEG Dynamic Adaptive Streaming over HTTP manifest (ISO/IEC DIS 23001-6)
+		</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="(M2T|MP4|ASF|3GP|AVI|MSSmoothStreaming|LiveStreaming|F4M|DASH|private :.+)"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ImageCodecType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="(JPG|BMP|GIF|TIF|PNG|private:.+)"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="BitRateResolutionType">
+		<xsd:annotation>
+			<xsd:documentation>Pair of bitrate/resolution values (adaptive streaming).</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="BitRate" type="xsd:integer" minOccurs="0"/>
+			<xsd:element name="Resolution" type="ResolutionType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

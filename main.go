@@ -1,14 +1,42 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
-
 	"github.com/lfordyce/generalNotes/concurrency"
 	"github.com/lfordyce/generalNotes/interview"
 	"github.com/lfordyce/generalNotes/sorting"
 )
 
+func staircase(n int) {
+
+	var buffer bytes.Buffer
+	stuff := make([]int, 0, n)
+
+	for i := 1; i <= n; i++ {
+		stuff = append(stuff, i)
+		fmt.Println(stuff)
+
+		//buffer.Write([]byte("#"))
+		buffer.WriteString("#")
+		fmt.Println(buffer.String())
+	}
+
+}
+
+type T struct {
+	name string
+}
+
+func (t *T) SayHi() {
+	fmt.Printf("Hi my name is %s\n", t.name)
+}
+
 func main() {
+
+	t := &T{"Batman"}
+	f := (*T).SayHi
+	f(t)
 
 	str := "racecar" // len = 7
 	str2 := "aabbaa" // len 6
@@ -41,4 +69,5 @@ func main() {
 
 	concurrency.Init()
 	concurrency.HandleAsyncCalls()
+
 }

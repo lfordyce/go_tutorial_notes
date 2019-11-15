@@ -1,0 +1,797 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:cablelabs:md:xsd:core:3.0" targetNamespace="urn:cablelabs:md:xsd:core:3.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1">
+	<!-- Import for xml:lang and xml:space -->
+	<xsd:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+	<!--                         -->
+	<!-- Indentifier types -->
+	<!--                         -->
+	<xsd:simpleType name="URIIdType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">A globally unique primary identifier of an asset, and is the concatenation of {ProviderId}/{AssetId}.
+
+The {ProviderId} is a string that is a registered Internet domain name (e.g., contentOnDemand.com or serviceprovider.com) or a sub-domain of a registered Internet domain name (e.g. abc.cp.com or xyz.sp.com) as defined in section 3.5 of [RFC1034].  There is no required relationship between the ProviderId portion of uriId and other seemingly related asset metadata, even though it may be common practice to use the corresponding Provider_ID [Content1.1] value. 
+
+The {AssetId} is equivalent to the path component of a URI as defined in section 3.3 of [RFC3986].  AssetIds are assigned by the provider (as identified by the ProviderId) and must be unique within the realm of the provider.   There is no required relationship between the AssetId portion on an uriId and the assetId deprecated asset attribute, even though it may be common practice to use the corresponding Asset_ID [Content1.1] value. 
+
+Note that the uriId pattern used in the informative examples in Appendix I and in the ADI1.1 XSL transforms follows a restricted form of the uriId pattern as follows:
+ 
+{Provider_ID}/{AssetDiscriminator}/{Asset_ID} 
+
+For this restricted form, the {ProviderId} portion of the uriId corresponds to the Provider_ID [Content1.1] value, and the {AssetId} portion of the uriId corresponds to the concatenation of the {AssetDiscriminator} (a literal value determined by the type of Asset, e.g. “Offer”), a literal “/”, and the Asset_ID [Content1.1] value.  This specific form is recommended when backwards-compatible with ADI1.1 is required.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:anyURI">
+			<xsd:maxLength value="1024"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="IdentifierSystemType">
+		<xsd:annotation>
+			<xsd:documentation>A system used to provide an alternate identifer for an asset.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="NonEmptyStringType"/>
+	</xsd:simpleType>
+	<xsd:complexType name="AlternateIdType">
+		<xsd:annotation>
+			<xsd:documentation>An alternate identifier for an asset</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="NonEmptyStringType">
+				<xsd:attribute name="identifierSystem" type="IdentifierSystemType" use="required"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<!--                              -->
+	<!-- Misc String types -->
+	<!--                              -->
+	<xsd:simpleType name="NonEmptyStringType">
+		<xsd:annotation>
+			<xsd:documentation>A non-empty (at least 1 character) string</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="ProductType">
+		<xsd:annotation>
+			<xsd:documentation>The types of product that is delivered through these terms.		</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:restriction base="DeprecatedStringType"/>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="DescriptionType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Description of an asset.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:restriction base="DeprecatedStringType">
+				<xsd:maxLength value="100"/>
+			</xsd:restriction>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="AssetNameType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Name of an asset as supplied by the provider; typically a descriptive, preferably unique name that identifies and describes the asset.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:restriction base="DeprecatedStringType">
+				<xsd:maxLength value="50"/>
+			</xsd:restriction>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="TrickModeRestrictionType">
+		<xsd:annotation>
+			<xsd:documentation>
+				<p>Trick Mode Restriction Type defines type and viewing rate scale restrictions. Note that, for each Trick Mode Restriction,
+		    all trick modes are initially permitted, less those explicitly excluded below. Restrictions on placements are applied to all
+		    AssetRefs. If restrictions are specified on both the placement and AssetRef, they are combined.</p>
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="TrickModeExclusion" type="TrickModeExclusionType" maxOccurs="unbounded"/>
+			<xsd:element name="TrickModeRestrictionRule" type="ProcessRuleSelectorType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						<p>Optional trick mode restriction rule. If we are within the effective period as defined by
+				    EffectiveDatesDayTimeAttributeGroup, any rule that is present is evaluated: if it returns TRUE in a well defined value,
+				    the trick mode restriction is applied.</p>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Ext" type="ExtType" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attributeGroup ref="EffectiveDatesDayTimeAttributeGroup"/>
+		<xsd:anyAttribute namespace="##any" processContents="lax"/>
+	</xsd:complexType>
+	<xsd:complexType name="TrickModeExclusionType">
+		<xsd:annotation>
+			<xsd:documentation>
+				<p>Defines one particular trick mode exclusion composed of a type and, for type="trick", a speed scaling factor
+		    or range of factors. The scale factor is the ratio of the play speed to normal play speed; forward speeds are
+		    positive, and backward speeds are negative.</p>
+				<p>Normal is forward at an implied scale of 1.0, and that combination is always explicit (i.e., normal play is
+		    never an implied part of a trick range).</p>
+				<p>Trick is a multiple of normal play speed, signed for forward or reverse. Trick 0.0 describes no play (i.e., pause).</p>
+				<p>Jump is a navigational notation used for transitions such as "digital rewind" or "go to chapter". It does not have a speed.</p>
+				<p>All is all trick modes, but excludes normal play.</p>
+				<p>If present, lowertest and uppertest are applied when evaluating the scale value. The default tests are "ge" for lowertest and "le" for uppertest.</p>
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="type" type="TrickModeType" use="required"/>
+		<xsd:attribute name="scale" type="SpeedScaleType"/>
+		<xsd:attribute name="lowertest" type="LowerTestType"/>
+		<xsd:attribute name="uppertest" type="UpperTestType"/>
+	</xsd:complexType>
+	<xsd:simpleType name="SpeedScaleType">
+		<xsd:annotation>
+			<xsd:documentation>
+				<p>One optionally-signed decimal number with two optional decimal places representing transport speed, optionally
+		    followed by a comma and a second value to indicate a range of speeds. The minimum absolute value is zero, the
+		    maximum absolute value is 100, and the resolution is 0.01.</p>
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="NonEmptyStringType">
+			<xsd:pattern value="[+-]?(100|([0-9]{1,2})(\.[0-9]{1,2}))(,[+-]?(100|([0-9]{1,2})(\.[0-9]{1,2})))?"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="TrickModeType">
+		<xsd:annotation>
+			<xsd:documentation>
+				<p>Trick-mode type identifier. Play is always used with a scale or scale range. Key use cases are:<br/>
+		    1) enter in normal play, where the viewer can pause or "rewind", meaning reverse play; and<br/>
+		    2) once entered, the viewer can only watch at normal play, or pause. The play modes are as follows:</p>
+				<ul>
+					<li>Normal play has an implied speed of 1.0, and that value is never restricted: 1.0 is never an
+		      implied part of any type, including trick speeds which span 1.0.</li>
+					<li>'pause' has an implied speed of 0.0, and that value is only explicit with the pause type:
+		      0.0 is never implied as part of 'all', or of trick speeds which span 0.0.</li>
+					<li>'trick' represents a range of presentation speeds across both directions. 'Trick' always 
+		      excludes pause or normal, even if the values of 0.0 or 1.0 are enclosed in the range.</li>
+					<li>'jump' is navigational notation, not a transport direction, such as "digital rewind" or "go to chapter".</li>
+					<li>'all' refers to every play and jump mode <em>except</em> normal play and pause</li>
+					<li>The prefix 'private:" refers to a private model for both type and speed.</li>
+				</ul>
+				<p>Trick type examples:</p>
+				<pre>
+		      TYPE   SCALE
+		      trick  0.0,100         refers to pause and all forward play except normal play
+		      trick  0.0,100         refers to all forward play except normal play
+		      trick  2.01,100        refers to forward play greater than 2x
+		      trick -100,100         refers to all foward and reverse play except normal play and pause
+		      
+		      trick -100,-1.01 and
+		      trick -0.99,100        refers to all foward and reverse play except explicitly omitted reverse 
+		                             normal play and implicitly omitted normal play and pause.
+		    </pre>
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="trick|jump|all|pause|private:.+"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="LowerTestType">
+		<xsd:annotation>
+			<xsd:documentation>The LowerTestType provides a floor by stipulating the value must be &gt;, &gt;= or private:*</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="gt|gteq|private:.+"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="UpperTestType">
+		<xsd:annotation>
+			<xsd:documentation>upperTestType provides a ceiling by stipulating the value must be &lt;, &lt;= or private:*</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="lt|lteq|private:.+"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="ProcessRuleSelectorType">
+		<xsd:annotation>
+			<xsd:documentation>
+				<p>ProcessRuleSelector defines one set of parameters for the rules engine that generate one data
+		    process associated with an element. The attributes are optional, primarily to permit them to be supplanted 
+		    by new attributes, but a minimal operational set will be defined by profile.</p>
+				<p>Arg is an argument to be supplied to the rule along with the process rule. Args have an actual name in
+		    the 'name' attribute and a value in the mixed content body. If the actual name can be matched to a formal name in the
+		    rule definition, the value of the arg MUST be substituted for that formal name in the rule invocation.
+		    The affiliate destination URL might be a typical argument.</p>
+				<p>RuleId is the repository-specific ID for the rule to be invoked.  It is appended to the ruleRepository URL to form a
+			composite URL that is the complete and unique rule identifier. An HTTP GET at that composite URL MUST return a rule
+			manifest providing complete definition and usage data for the rule.</p>
+				<p>RuleRepository is the URL of the repository that contains the rule to be invoked. Also, an HTTP GET at the
+		    repository URL MUST return a list of all the rules available at that repository.</p>
+				<p>Ext is supplied to allow attributes to be added in the same form as those currently defined.</p>
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="Arg" type="ArgRefType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="Ext" type="ExtType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="ruleId" type="xsd:string" use="required"/>
+		<xsd:attribute name="ruleRepository" type="xsd:anyURI" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="ArgRefType" mixed="true">
+		<xsd:annotation>
+			<xsd:documentation>
+				<p>Container for rule argument variable/value pair, with the variable name in the attribute and the value in the element body.</p>
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:restriction base="xsd:anyType">
+				<xsd:attribute name="variable" type="VariableNameType" use="required"/>
+			</xsd:restriction>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:simpleType name="VariableNameType">
+		<xsd:annotation>
+			<xsd:documentation>
+				<p>A name string for one of the actual arguments of a rule invocation.</p>
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="NonEmptyStringType"/>
+	</xsd:simpleType>
+	<xsd:complexType name="LocalizableStringType">
+		<xsd:annotation>
+			<xsd:documentation>
+				A string which can be specified in multiple lanaguages for localization.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="NonEmptyStringType">
+				<xsd:attribute ref="xml:lang" use="optional"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:simpleType name="ContactInfoType">
+		<xsd:annotation>
+			<xsd:documentation>
+				just a blob string typically it is full name,email -- import from another XSD standard OASIS ebXML
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="NonEmptyStringType">
+			<xsd:maxLength value="1024"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="OrganizationNameType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Name of an Organization (e.g. company, distributor, studio).		</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="NonEmptyStringType">
+			<xsd:maxLength value="128"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="OrganizationCodeType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">A code utilized to identify an organization (e.g. distributor, studio) for billing purposes, typically three digits. A suggested list of codes may be found at http://www.cablelabs.com/projects/metadata/downloads/studio_code_list.pdf.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="NonEmptyStringType">
+			<xsd:maxLength value="8"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ShortNameType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Short person names type used for first and last names.	</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="NonEmptyStringType">
+			<xsd:maxLength value="16"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="LongNameType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Long person names type used for full and sortable names.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="NonEmptyStringType">
+			<xsd:maxLength value="32"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ListDisplayType">
+		<xsd:annotation>
+			<xsd:documentation>A displayable list of people (actors, writers) or organizations (studios) separated by commas.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="NonEmptyStringType">
+			<xsd:maxLength value="1024"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="DisplayRunTimeType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Displayable run time of media content in hH:MM:ss, where the first hour digit and seconds are each optional.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="NonEmptyStringType">
+			<xsd:pattern value="([0-9]{1,2}):[0-5][0-9](:[0-5][0-9])?"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="CountryType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[a-zA-Z]{2}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="GenreType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">
+				The types of genres allowed according to cableLabs specification (in CamelCase): http://www.cablelabs.com/projects/metadata/downloads/genre_classification_list.pdf.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="NonEmptyStringType">
+			<xsd:maxLength value="32"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ProgrammerCallLettersType">
+		<xsd:restriction base="NonEmptyStringType">
+			<xsd:maxLength value="6"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="PersonType">
+		<xsd:annotation>
+			<xsd:documentation>Base type describing a person, useful for actors, singers, producers, directors, etc.		</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="firstName" type="ShortNameType" use="required"/>
+		<xsd:attribute name="lastName" type="ShortNameType" use="optional"/>
+		<xsd:attribute name="sortableName" type="LongNameType" use="optional"/>
+		<xsd:attribute name="fullName" type="LongNameType" use="required"/>
+		<xsd:anyAttribute namespace="##any" processContents="lax"/>
+	</xsd:complexType>
+	<!--                                          -->
+	<!--Asset type -->
+	<!--                                          -->
+	<xsd:complexType name="AssetType" abstract="true">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">An abstract base type from which all other MD3.0 assets are derived.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="AlternateId" type="AlternateIdType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Any number of alternate identifiers (e.g. VOD1.1, ISAN, Ad-ID) that may be used to identify this asset.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ProviderQAContact" type="ContactInfoType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>A contact identifier in case there are quality issues with this asset.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="AssetName" type="AssetNameType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>DEPRECATED. The name of the asset as designated by the provider (e.g. "Die Hard Movie").</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Product" type="ProductType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>DEPRECATED. A unique (within the provider's namespace) identifier for the product associated with this asset.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Provider" type="NonEmptyStringType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>A unique identifier for the asset's provider.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Description" type="DescriptionType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>DEPRECATED. A description of the asset.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Ext" type="ExtType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>In addition to the elements and attributes defined, an asset may include additional, custom content within this element as needed by the application.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="MasterSourceRef" type="AssetRefType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Source content from which this content was derived</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="uriId" type="URIIdType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>The primary unique identifier for this asset.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="providerVersionNum" type="xsd:integer">
+			<xsd:annotation>
+				<xsd:documentation>The provider-supplied version number of the asset. Should be incremented each time the asset is changed by the provider.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="internalVersionNum" type="xsd:integer">
+			<xsd:annotation>
+				<xsd:documentation>The internal version number of the asset. This version number should be set to 0 by the provider whenever providerVersionNum is changed. Likewise, this version number should be increased when internal variants of the asset are generated within the on-demand system.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="creationDateTime" type="xsd:dateTime">
+			<xsd:annotation>
+				<xsd:documentation>The date and time the asset was created. This date and time field can, at the provider's discretion, be updated to a more recent time by the provider whenever the asset is changed, but that behavior is not required.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="startDateTime" type="xsd:dateTime">
+			<xsd:annotation>
+				<xsd:documentation>The optional start of the asset lifetime.  If not included the asset is live since the beginning of time.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="endDateTime" type="xsd:dateTime">
+			<xsd:annotation>
+				<xsd:documentation>The optional end of the asset lifetime. If not included the asset is live until the end of time or updated by the provider.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="notifyURI" type="xsd:anyURI">
+			<xsd:annotation>
+				<xsd:documentation>URL of the callback URI for notifications, such as transfer state</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="lastModifiedDateTime" type="xsd:dateTime">
+			<xsd:annotation>
+				<xsd:documentation>Timestamp of the last modification to the asset</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="eTag" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>Entity tag, an opaque identifier associated with the current version of an asset</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="state" type="StateType">
+			<xsd:annotation>
+				<xsd:documentation>The state of the asset</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="stateDetail" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>Detailed state information (human-readable description) for the state.  Typically used if state indicates an error condition.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>In addition to the attributes defined, an asset may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<xsd:complexType name="AssetRefBaseType" abstract="true">
+		<xsd:annotation>
+			<xsd:documentation>An abstract base type that defines a reference to an asset.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="Ext" type="ExtType" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attribute name="uriId" type="URIIdType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>The uriId of the asset being referenced.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:anyAttribute namespace="##any" processContents="lax"/>
+	</xsd:complexType>
+	<xsd:complexType name="AssetRefType">
+		<xsd:annotation>
+			<xsd:documentation>A type that defines a reference to an asset.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="AssetRefBaseType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!--                        -->
+	<!-- Ratings types -->
+	<!--                        -->
+	<xsd:simpleType name="RatingSystemType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">The name of a rating system (e.g. MPAA, TV, etc.).</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="NonEmptyStringType">
+			<xsd:maxLength value="50"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="RatingBaseType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">The actual content rating (e.g. "PG", "R", "TV-MA").</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="NonEmptyStringType">
+			<xsd:maxLength value="50"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="RatingType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Content rating combined with the corresponding rating system attribute.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="RatingBaseType">
+				<xsd:attribute name="ratingSystem" type="RatingSystemType"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:simpleType name="AudienceType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">A value representing the target audience often used in concert with content advories. The value should come from one of the predefined choices (defined in the pattern) or prefixed with "private:".</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="NonEmptyStringType">
+			<xsd:pattern value="(Adult|Mature|General|Family|Teen|Children|private:.+)"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="AdvisoryType">
+		<xsd:annotation>
+			<xsd:documentation>An abbreviated value describing certain types of content. The value should come from one of the predefined choices (defined in the pattern) or prefixed with "private:".</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="NonEmptyStringType">
+			<xsd:pattern value="(V|MV|GV|AL|GL|AC|SC|N|BN|RP|private:.+)"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ShowTypeType">
+		<xsd:annotation>
+			<xsd:documentation>A value representing a type of show. The value should come from one of the predefined choices (defined in the pattern) or prefixed with "private:".</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="NonEmptyStringType">
+			<xsd:pattern value="(Series|Sports|Music|Ad|Miniseries|Movie|Kids|Events|Lifestyle|Other|Paid Programming|Barker|private:.+)"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!--                                          -->
+	<!-- Misc date and time types -->
+	<!--                                          -->
+	<xsd:complexType name="DateTimeRangeType">
+		<xsd:annotation>
+			<xsd:documentation>A pair of dateTime values that together represent a start and an end.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="startDateTime" type="xsd:dateTime" use="required"/>
+		<xsd:attribute name="endDateTime" type="xsd:dateTime" use="required"/>
+	</xsd:complexType>
+	<xsd:attributeGroup name="EffectiveDatesDayTimeAttributeGroup">
+		<xsd:annotation>
+			<xsd:documentation>Effective dates, days and times.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="startDateTime" type="xsd:dateTime">
+			<xsd:annotation>
+				<xsd:documentation>
+					<p>If present, the date/time this reference is active. startDateTime and endDateTime are optional values;
+		      however, if they are present, the startDateTime and endDateTime MUST be evaluated prior to evaluating any
+		      other attribute in this section. This attribute group can take several forms:</p>
+					<ul>
+						<li>Omitting this attribute group indicates that the reference is active for the lifetime of the entry.</li>
+						<li>Start-only entries become active when the start date/time is reached.</li>
+						<li>End-only entries are active until the end date/time is reached.</li>
+						<li>Start/end entries are active from the start date/time, and are active until the end date/time is reached.</li>
+					</ul>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="endDateTime" type="xsd:dateTime">
+			<xsd:annotation>
+				<xsd:documentation>
+					<p>If present, the date/time this reference becomes inactive.</p>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="mon" type="xsd:boolean" default="true">
+			<xsd:annotation>
+				<xsd:documentation>
+					<p>Effective days of the week. Each day of the week is represented by an independent Boolean value. By default, all
+			    days are active; set a day to false to make the entry inactive for that day.</p>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="tue" type="xsd:boolean" default="true"/>
+		<xsd:attribute name="wed" type="xsd:boolean" default="true"/>
+		<xsd:attribute name="thu" type="xsd:boolean" default="true"/>
+		<xsd:attribute name="fri" type="xsd:boolean" default="true"/>
+		<xsd:attribute name="sat" type="xsd:boolean" default="true"/>
+		<xsd:attribute name="sun" type="xsd:boolean" default="true"/>
+		<xsd:attribute name="startTime" type="xsd:time">
+			<xsd:annotation>
+				<xsd:documentation>
+					<p>Start time of day for being active. For example, 09:00:00 represents 9:00am local time; 09:00:00Z
+			    represents 9:00 am UTC; and 09:00:00-06:00 applies an offset. If startTime is omitted, the entry is
+			    effective for the entire days listed based on local time. If you wish to use UTC time to represent
+			    the entire day, specify a start time of 00:00:00Z with a duration of 23:59:59.</p>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="duration" type="xsd:duration">
+			<xsd:annotation>
+				<xsd:documentation>
+					<p>Effective duration of time from the start time. If duration is supplied and startTime is omitted, 
+			    duration MUST be ignored. Note that duration can extend into the next day. If an end date/time is
+			    specified, it MUST be observed when calculating the actual end time based on startTime and duration,
+			    and supersedes the duration attribute.</p>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:attributeGroup>
+	<xsd:simpleType name="SMPTETimeType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">
+				SMPTE time of media content in HH:MM:SS:FF.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="NonEmptyStringType">
+			<xsd:pattern value="[0-9]{1,2}:[0-5][0-9]:[0-5][0-9]:[0-9]{1,2}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="EffectiveAssetRefType">
+		<xsd:annotation>
+			<xsd:documentation>Identifies an Asset based on a asset reference which includes optional start/end range limits on being active, use to set the days of the week and hours within the day</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="AssetRefType">
+				<xsd:attribute name="order" type="xsd:unsignedInt">
+					<xsd:annotation>
+						<xsd:documentation>The order, lowest to highest, in which to process Assets. In some cases, 2 or more active Assets with the same value for order may result in indeterminate processing.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attributeGroup ref="EffectiveDatesDayTimeAttributeGroup"/>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!--                              -->
+	<!-- Extensibility types -->
+	<!--                              -->
+	<xsd:complexType name="ExtType">
+		<xsd:annotation>
+			<xsd:documentation>This type may contain elements or attributes from any namespace and is provided for future extensibility.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:anyAttribute namespace="##any" processContents="lax"/>
+	</xsd:complexType>
+	<xsd:simpleType name="PercentType">
+		<xsd:annotation>
+			<xsd:documentation>A numeric value with 2 decimal places for percentage (e.g. 0.25%).</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:decimal">
+			<xsd:fractionDigits value="2"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="CurrencyType">
+		<xsd:annotation>
+			<xsd:documentation>A 3-letter code conforming to ISO-4217.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[a-zA-Z]{3}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="PriceType">
+		<xsd:annotation>
+			<xsd:documentation>A decimal value for price combined with the corresponding currency attribute.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:decimal">
+				<xsd:attribute name="currency" type="CurrencyType" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>A 3-letter code conforming to ISO-4217.  May be assumed to be "USD" (United States Dollar) if not provided.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="retail" type="xsd:decimal" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>The retail price (same currency)</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:simpleType name="LanguageType">
+		<xsd:annotation>
+			<xsd:documentation> RFC 1766 language codes e.g. en or en-US.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:language"/>
+	</xsd:simpleType>
+	<xsd:complexType name="DeprecatedStringType">
+		<xsd:simpleContent>
+			<xsd:extension base="NonEmptyStringType">
+				<xsd:attribute name="deprecated" type="xsd:boolean" use="required" fixed="true"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="DeprecatedBooleanType">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:boolean">
+				<xsd:attribute name="deprecated" type="xsd:boolean" use="required" fixed="true"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:simpleType name="StateType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">The states of an asset.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="(Provisioned|Processing|Failed|Verified|Available|Deleting|Deleted|private:.+)"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="ErrorType">
+		<xsd:annotation>
+			<xsd:documentation>An error code and error message.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="LocalizableStringType">
+				<xsd:attribute name="code" type="xsd:unsignedLong"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="ErrorListType">
+		<xsd:annotation>
+			<xsd:documentation>A list of errors that occured.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="Error" type="ErrorType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ADIContainerType">
+		<xsd:annotation>
+			<xsd:documentation>
+			An ADI container element for holding anything.
+		</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="Asset" type="AssetType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="Ext" type="ExtType" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:anyAttribute namespace="##any" processContents="lax"/>
+	</xsd:complexType>
+	<xsd:complexType name="BucketType">
+		<xsd:annotation>
+			<xsd:documentation>Bucket are logical Asset containers associated with the {ProviderId} portion of the asset uriId.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="TotalStorage" type="xsd:unsignedLong" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Total storage capacity in bytes.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="AvailableStorage" type="xsd:unsignedLong" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Current unused capacity in bytes.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="InputProtocols" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Input protocols the Bucket supports .</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="TotalInputBandwidth" type="xsd:unsignedLong" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Total input capacity in bits per second.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="AvailableInputBandwidth" type="xsd:unsignedLong" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Current unused input capacity in bits per second.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="OutputProtocols" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Output protocols the bucket supports.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="TotalOutputBandwidth" type="xsd:unsignedLong" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>total output capacity in bits per second.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="AvailableOutputBandwidth" type="xsd:unsignedLong" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Current unused output capacity in bits per second.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="NumAssets" type="xsd:unsignedLong" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>The number of assets currently associated with the Bucket.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="providerId" type="URIIdType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>The primary unique identifier for this bucket.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="BucketListType">
+		<xsd:annotation>
+			<xsd:documentation>A sequence of Bucket elements</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="Bucket" type="BucketType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="StatusCodeType">
+		<xsd:sequence>
+			<xsd:element name="Note" type="NonEmptyStringType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="classCode" type="xsd:nonNegativeInteger" use="required"/>
+		<xsd:attribute name="detailCode" type="xsd:nonNegativeInteger" use="optional"/>
+	</xsd:complexType>
+	<xsd:element name="StatusCode" type="StatusCodeType"/>
+	<xsd:element name="Bucket" type="BucketType"/>
+	<xsd:element name="BucketList" type="BucketListType"/>
+	<xsd:element name="ADI3" type="ADIContainerType"/>
+	<xsd:element name="ErrorList" type="ErrorListType"/>
+	<xsd:element name="Error" type="ErrorType"/>
+</xsd:schema>

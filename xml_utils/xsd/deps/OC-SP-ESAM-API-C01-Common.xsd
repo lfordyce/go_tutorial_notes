@@ -1,0 +1,864 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:core="urn:cablelabs:md:xsd:core:3.0"
+            xmlns:sig="urn:cablelabs:md:xsd:signaling:3.0" xmlns:content="urn:cablelabs:md:xsd:content:3.0"
+            xmlns="urn:cablelabs:iptvservices:esam:xsd:common:1"
+            targetNamespace="urn:cablelabs:iptvservices:esam:xsd:common:1" elementFormDefault="qualified"
+            attributeFormDefault="unqualified" version="1">
+    <xsd:annotation>
+        <xsd:documentation>
+            <p>
+                <b>Copyright (c)2016, Cable Television Laboratories, Inc.</b>
+                <b>ESAM Common XML Schema, Release Version C01</b>
+                <b>Real-time Event Signaling and Management API</b>
+                <b>This schema is a normative component of CableLabs® Real-time Event Signaling and
+                    Management API Specification, OC-SP-ESAM-API-C01-161021</b>
+            </p>
+        </xsd:documentation>
+    </xsd:annotation>
+    <xsd:import namespace="urn:cablelabs:md:xsd:core:3.0" schemaLocation="MD-SP-CORE-C01.xsd"/>
+    <xsd:import namespace="urn:cablelabs:md:xsd:content:3.0" schemaLocation="MD-SP-CONTENT-C01.xsd"/>
+    <xsd:import namespace="urn:cablelabs:md:xsd:signaling:3.0"
+                schemaLocation="MD-SP-SIGNALING-C01.xsd"/>
+    <!--                                                 -->
+    <!--Submit a request for notifications related to a specific URI-->
+    <xsd:element name="SASRegistrationRequest" type="SASRegistrationRequestType">
+        <xsd:annotation>
+            <xsd:documentation>Signal Acquisition System registration request message element. Use
+                to pass callout addresses and attributes.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="SASRegistrationResponse" type="SASRegistrationResponseType">
+        <xsd:annotation>
+            <xsd:documentation>Registration response message element. SPS accepts or denies the
+                registration from an SAS.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="SPSRegistrationRequest" type="SPSRegistrationRequestType">
+        <xsd:annotation>
+            <xsd:documentation>SPS Registration request message element sent from an SPS to an SAS. SPS can pass details on the SPS inclusive of redudant end points, etc.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="SPSRegistrationResponse" type="SPSRegistrationResponseType">
+        <xsd:annotation>
+            <xsd:documentation>Registration response message element. SAS accepts or denies the registration from an SPS.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="SASDeregistrationRequest" type="SASDeregistrationRequestType">
+        <xsd:annotation>
+            <xsd:documentation>SAS deregister request message element.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="SASDeregistrationResponse" type="SASDeegistrationResponseType">
+        <xsd:annotation>
+            <xsd:documentation>Deregistration response message element. SPS accepts or denies the registration from an SAS. </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="SPSDeregistrationRequest" type="SPSDeregistrationRequestType">
+        <xsd:annotation>
+            <xsd:documentation>SPS deregister request message element.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="SPSDeregistrationResponse" type="SPSDeegistrationResponseType">
+        <xsd:annotation>
+            <xsd:documentation>Deregistration response message element. SAS accepts or denies the registration from an SPS. </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="UriProcessingRequest">
+        <xsd:annotation>
+            <xsd:documentation>Container for passing a Uri reference to a processing system that has
+                descriptive data related to the specified uri</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+            </xsd:sequence>
+            <xsd:attribute name="acquisitionPointIdentity" type="core:NonEmptyStringType">
+                <xsd:annotation>
+                    <xsd:documentation>A unique identity of the acquisition point. (ex.
+                        MUX5)</xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="batchId" type="BatchIDType" use="required">
+                <xsd:annotation>
+                    <xsd:documentation>A unique identifier for the Batch </xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="uriId" type="core:URIIdType" use="required">
+                <xsd:annotation>
+                    <xsd:documentation>The identity of the underlying asset to process. Typically
+                        used for processing a file based asset that has associated descriptive data
+                        about points and regions of interest within an asset. </xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="spsToken" type="xsd:token">
+                <xsd:annotation>
+                    <xsd:documentation>Optional spsToken for the SPS. This token should appear in any messages exchanged between the SAS and SPS.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="sasToken" type="xsd:token">
+                <xsd:annotation>
+                    <xsd:documentation>Optional sasToken as recieved in an SASRegistrationRequest. The sasToken should appear in any messages exchanged betweened the SAS and SPS. </xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:anyAttribute namespace="##any" processContents="lax">
+                <xsd:annotation>
+                    <xsd:documentation>In addition to the attributes defined, Uri Process Request
+                        may include additional, custom attributes as needed by the
+                        application.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:anyAttribute>
+        </xsd:complexType>
+    </xsd:element>
+    <!--Submit a request for notifications related to a specific stream-->
+    <xsd:element name="SignalStateRequest">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+            </xsd:sequence>
+            <xsd:attribute name="acquisitionPointIdentity" type="core:NonEmptyStringType"
+                           use="required">
+
+                <xsd:annotation>
+                    <xsd:documentation>A unique identity of the acquisition point. (ex.
+                        MUX5)</xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="uriId" type="core:URIIdType" use="optional">
+                <xsd:annotation>
+                    <xsd:documentation>Optional identity of the underlying asset to process. The
+                        PAID or other URL of the stream or asset.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="startDateTime" type="xsd:dateTime">
+                <xsd:annotation>
+                    <xsd:documentation>Optional start date/time - return
+                        SignalProcessingNotification with all event records equal to or later than
+                        the start date/time for the acquisition point identified in
+                        acquisitionPointIdentity.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="spsToken" type="xsd:token">
+                <xsd:annotation>
+                    <xsd:documentation>Optional spsToken for the SPS. This token should appear in any messages exchanged between the SAS and SPS.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="sasToken" type="xsd:token">
+                <xsd:annotation>
+                    <xsd:documentation>Optional sasToken as recieved in an SASRegistrationRequest. The sasToken should appear in any messages exchanged betweened the SAS and SPS. </xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:anyAttribute namespace="##any" processContents="lax"/>
+        </xsd:complexType>
+    </xsd:element>
+    <!--Acknowlege a process status notification-->
+    <!--Process status notification-->
+    <xsd:element name="ProcessStatusNotification" type="ProcessStatusNotificationType">
+        <xsd:annotation>
+            <xsd:documentation>Container to sending status of a processing request from the signal acquisition system to the signal processing system.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <!--Process status response-->
+    <xsd:element name="ProcessStatusAcknowledgement" type="ProcessStatusAcknowledgementType">
+        <xsd:annotation>
+            <xsd:documentation>Container for acknowledging a
+                ProcessStatusNotification</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <!--Process status request-->
+    <xsd:element name="ProcessStatusRequest" type="ProcessStatusRequestType">
+        <xsd:annotation>
+            <xsd:documentation>Container to request status of a process from the signal acquisition
+                system and a signal processing system.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <!--Process status response-->
+    <xsd:element name="ProcessStatusResponse" type="ProcessStatusResponseType">
+        <xsd:annotation>
+            <xsd:documentation>Container for responding to a
+                ProcessStatusRequest</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <!-- Service check request -->
+    <xsd:element name="ServiceCheckRequest" type="ServiceCheckRequestType">
+        <xsd:annotation>
+            <xsd:documentation>Service check request message element.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <!-- Service status notification -->
+    <xsd:element name="ServiceStatusNotification" type="ServiceStatusNotificationType">
+        <xsd:annotation>
+            <xsd:documentation>Service status notification message element.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <!--                        -->
+    <!-- Complex types -->
+    <!--                        -->
+    <!--Address Type-->
+    <!--                        -->
+    <xsd:complexType name="AddressType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="type" type="core:NonEmptyStringType" use="optional">
+                    <xsd:annotation>
+                        <xsd:documentation>Endpoint information type. </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+                <xsd:anyAttribute namespace="##any" processContents="lax"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:element name="Address" type="AddressType">
+        <xsd:annotation>
+            <xsd:documentation>Endpoint information.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <!--                        -->
+    <!-- Batch Info Type - supplied when initiate a batch operation. For example, to process files based content like VOD or advertising. -->
+    <!--                   -->
+    <xsd:complexType name="BatchInfoType">
+        <xsd:sequence>
+            <xsd:element name="Source" type="content:MovieType" minOccurs="0"/>
+            <xsd:element name="Destination" type="content:MovieType" minOccurs="0"
+                         maxOccurs="unbounded"/>
+
+            <xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="batchId" type="BatchIDType" use="required">
+            <xsd:annotation>
+                <xsd:documentation>A unique identifier for the Batch </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:anyAttribute namespace="##any" processContents="lax">
+            <xsd:annotation>
+                <xsd:documentation>Batch info may include additional, custom attributes as needed by
+                    the application.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:anyAttribute>
+    </xsd:complexType>
+    <!--Callout Element-->
+    <xsd:complexType name="CalloutType">
+        <xsd:sequence>
+            <xsd:element ref="Address" maxOccurs="unbounded"/>
+            <xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="message" type="core:NonEmptyStringType" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>Specific message to be delivered via the supplied destination.
+                    Omit if all messages are to be delivered to the specified
+                    destination.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:anyAttribute namespace="##any" processContents="lax"/>
+    </xsd:complexType>
+    <xsd:element name="Callout" type="CalloutType">
+        <xsd:annotation>
+            <xsd:documentation>All messages or per message type destination endpoint
+                identification.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <!--                        -->
+    <!-- Process Status Acknowlegement Type - acknowledge message to a process status notification-->
+    <!--                   -->
+    <xsd:complexType name="ProcessStatusAcknowledgementType">
+        <xsd:sequence>
+            <xsd:element name="StatusCode" type="core:StatusCodeType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>Provides return status information to the caller and is
+                        returned for all errors. May optionally be included in a response payload to
+                        provide warning or informational details.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="acquisitionPointIdentity" type="core:NonEmptyStringType">
+            <xsd:annotation>
+                <xsd:documentation>A unique identity of the acquisition point. (ex.
+                    MUX5)</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="acquisitionSignalID" type="sig:AcquisitionSignalIDType" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>A globally unique ID for the point
+                    referenced.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="batchId" type="BatchIDType" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>A unique identifier for the Batch </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="spsToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>Optional spsToken for the SPS. This token should appear in any messages exchanged between the SAS and SPS.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="sasToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>Optional sasToken as recieved in an SASRegistrationRequest. The sasToken should appear in any messages exchanged betweened the SAS and SPS. </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:anyAttribute namespace="##any" processContents="lax">
+            <xsd:annotation>
+                <xsd:documentation>A process status acknowledgemetn may include additional, custom
+                    attributes as needed by the application.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:anyAttribute>
+    </xsd:complexType>
+    <!--                        -->
+    <!-- Process Status Notification Type - status notificaiton for a process-->
+    <!--                   -->
+    <xsd:complexType name="ProcessStatusNotificationType">
+        <xsd:sequence>
+            <xsd:element name="StatusCode" type="core:StatusCodeType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>Provides return status information to the caller and is
+                        returned for all errors. May optionally be included in a response payload to
+                        provide warning or informational details.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="MultiSignalNotification">
+                <xsd:annotation>
+                    <xsd:documentation>This element provides ability to provide notifications on multiple signals.</xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="StatusCode" type="core:StatusCodeType"/>
+                    </xsd:sequence>
+                    <xsd:attribute name="acquisitionSignalID" type="sig:AcquisitionSignalIDType"
+                                   use="optional">
+                        <xsd:annotation>
+                            <xsd:documentation>A globally unique ID for the point
+                                referenced.</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                    <xsd:attribute name="signalPointID" type="core:URIIdType">
+                        <xsd:annotation>
+                            <xsd:documentation>SPS identifier for the signal this notification is associated with. Use core:AssetRefType when referencing a signalPointID. NOTE: not to be confused with the acquisitionSignalID generated by an acquisiton device if this signal is instantiated based on receipt of some instream signaling.</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="acquisitionPointIdentity" type="core:NonEmptyStringType">
+            <xsd:annotation>
+                <xsd:documentation>A unique identity of the acquisition point. (ex.
+                    MUX5)</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="acquisitionSignalID" type="sig:AcquisitionSignalIDType" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>A globally unique ID for the point
+                    referenced.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="signalPointID" type="core:URIIdType">
+            <xsd:annotation>
+                <xsd:documentation>SPS identifier for the signal this notification is associated with. Use core:AssetRefType when referencing a signalPointID. NOTE: not to be confused with the acquisitionSignalID generated by an acquisiton device if this signal is instantiated based on receipt of some instream signaling.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="batchId" type="BatchIDType" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>A unique identifier for the Batch </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="spsToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>Optional spsToken for the SPS. This token should appear in any messages exchanged between the SAS and SPS.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="sasToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>Optional sasToken as recieved in an SASRegistrationRequest. The sasToken should appear in any messages exchanged betweened the SAS and SPS. </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:anyAttribute namespace="##any" processContents="lax">
+            <xsd:annotation>
+                <xsd:documentation>A process status notification may include additional, custom
+                    attributes as needed by the application.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:anyAttribute>
+    </xsd:complexType>
+    <!--                        -->
+    <!-- Process Status Response Type - response message sent in response to a process status request-->
+    <!--                   -->
+    <xsd:complexType name="ProcessStatusResponseType">
+        <xsd:sequence>
+            <xsd:element name="StatusCode" type="core:StatusCodeType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>Provides return status information to the caller and is
+                        returned for all errors. May optionally be included in a response payload to
+                        provide warning or informational details.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="acquisitionPointIdentity" type="core:NonEmptyStringType" use="required">
+            <xsd:annotation>
+                <xsd:documentation>A unique identity of the acquisition point. (ex.
+                    MUX5)</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="acquisitionSignalID" type="sig:AcquisitionSignalIDType" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>A globally unique ID for the point
+                    referenced.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="batchId" type="BatchIDType" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>A unique identifier for the Batch </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="spsToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>Optional spsToken for the SPS. This token should appear in any messages exchanged between the SAS and SPS.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="sasToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>Optional sasToken as recieved in an SASRegistrationRequest. The sasToken should appear in any messages exchanged betweened the SAS and SPS. </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:anyAttribute namespace="##any" processContents="lax">
+            <xsd:annotation>
+                <xsd:documentation>A process status response may include additional, custom
+                    attributes as needed by the application.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:anyAttribute>
+    </xsd:complexType>
+    <!--                        -->
+    <!-- Process Status Request Type - request status for a process-->
+    <!--                   -->
+    <xsd:complexType name="ProcessStatusRequestType">
+        <xsd:attribute name="acquisitionPointIdentity" type="core:NonEmptyStringType" use="required">
+            <xsd:annotation>
+                <xsd:documentation>A unique identity of the acquisition point. (ex.
+                    MUX5)</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="acquisitionSignalID" type="sig:AcquisitionSignalIDType" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>A globally unique ID for the point
+                    referenced.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="batchId" type="BatchIDType">
+            <xsd:annotation>
+                <xsd:documentation>A unique identifier for the Batch </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="spsToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>Optional spsToken for the SPS. This token should appear in any messages exchanged between the SAS and SPS.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="sasToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>Optional sasToken as recieved in an SASRegistrationRequest. The sasToken should appear in any messages exchanged betweened the SAS and SPS. </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:anyAttribute namespace="##any" processContents="lax">
+            <xsd:annotation>
+                <xsd:documentation>A process status request may include additional, custom
+                    attributes as needed by the application.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:anyAttribute>
+    </xsd:complexType>
+    <!-- Signal Acquisition System (SAS) to Signal Processing System (SPS) Registration Request Message-->
+    <xsd:complexType name="SASRegistrationRequestType">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="SASCallout" type="CalloutType">
+                <xsd:annotation>
+                    <xsd:documentation>SAS Callouts - end points for SPS to call for specified
+                        functions.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="SASAttribute" maxOccurs="unbounded" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>SAS Attributes.</xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType mixed="true">
+                    <xsd:complexContent mixed="true">
+                        <xsd:extension base="xsd:anyType">
+                            <xsd:attribute name="attributeName" type="core:NonEmptyStringType"
+                                           use="required">
+                                <xsd:annotation>
+                                    <xsd:documentation>Name of attribute in name/value
+                                        pair.</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:attribute>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="acquisitionPointIdentity" type="core:NonEmptyStringType" use="required">
+            <xsd:annotation>
+                <xsd:documentation> A unique identity of the acquisition point. </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="sasToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>Unique token to associate with this registration request. The
+                    token may be passed on any message sent from the signal processing system to the
+                    signal acquisition system. </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="replacingAcquisionPointIdentity" type="core:NonEmptyStringType">
+            <xsd:annotation>
+                <xsd:documentation>If an SAS system is replacing another SAS system, this is the identity of the SAS system being replaced.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="replacingSasToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>If an SAS system is replacing another SAS system, this is the token of the SAS system being replaced.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:anyAttribute namespace="##any" processContents="lax"/>
+    </xsd:complexType>
+    <!--Signal Processing System (SPS) to Signal Acquisition System (SAS) Registration Response Message-->
+    <xsd:complexType name="SASRegistrationResponseType">
+        <xsd:sequence>
+            <xsd:element name="StatusCode" type="core:StatusCodeType"/>
+            <xsd:element minOccurs="0" name="SPSEndPointInfo">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element maxOccurs="unbounded" minOccurs="1" name="SPSCallouts"
+                                     type="SPSCalloutsType">
+                            <xsd:annotation>
+                                <xsd:documentation>An SPS may return the callouts for the SAS to utilize.</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                    </xsd:sequence>
+                    <xsd:attribute name="signalProcessingIdentity" type="core:NonEmptyStringType"
+                                   use="required">
+                        <xsd:annotation>
+                            <xsd:documentation> A unique identity of the signal processign system.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                    <xsd:attribute name="spsToken" type="xsd:token">
+                        <xsd:annotation>
+                            <xsd:documentation>SPS token that applies to all SPS end points defined.</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="sasToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>Optional sasToken as recieved in the SASRegistrationRequest.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:anyAttribute namespace="##any" processContents="lax"/>
+    </xsd:complexType>
+    <!--Signal Processing System (SPS) to Signal Acquisition System (SAS) Registration Request Message-->
+    <xsd:complexType name="SPSRegistrationRequestType">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="SPSCallouts"
+                         type="SPSCalloutsType">
+                <xsd:annotation>
+                    <xsd:documentation>For each SPS end point, the set of callouts and attributes
+                        for each.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="signalProcessingIdentity" type="core:NonEmptyStringType" use="required">
+            <xsd:annotation>
+                <xsd:documentation> A unique identity of the signal processign system.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="spsToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>Optional spsToken for the SPS. This token should appear in any messages exchanged between the SAS and SPS.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="sasToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>Optional sasToken as recieved in an SASRegistrationRequest. The sasToken should appear in any messages exchanged betweened the SAS and SPS. </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:anyAttribute namespace="##any" processContents="lax"/>
+    </xsd:complexType>
+    <!--Signal Acquisition System (SAS) to Signal Processing System (SPS) Registration Response Message-->
+    <xsd:complexType name="SPSRegistrationResponseType">
+        <xsd:sequence>
+            <xsd:element name="StatusCode" type="core:StatusCodeType"/>
+            <xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="spsToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>Optional spsToken for the SPS. This token should appear in any messages exchanged between the SAS and SPS.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="sasToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>Optional sasToken as passed in the SASRegistrationRequest.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:anyAttribute namespace="##any" processContents="lax"/>
+    </xsd:complexType>
+    <!--SAS to SPS Deregister Request Message-->
+    <xsd:complexType name="SASDeregistrationRequestType">
+        <xsd:sequence>
+            <xsd:element name="StatusCode" type="core:StatusCodeType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>Provides return status information to the caller and is
+                        returned for all errors. May optionally be included in a response payload to
+                        provide warning or informational details.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="acquisitionPointIdentity" type="core:NonEmptyStringType" use="required">
+            <xsd:annotation>
+                <xsd:documentation> A unique identity of the acquisition point. </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="sasToken" type="xsd:token" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>Reference to a previous SASRegistrationRequest
+                    message.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:anyAttribute namespace="##any" processContents="lax"/>
+    </xsd:complexType>
+    <!--Signal Acquisition System (SAS) to Signal Processing System (SPS) Registration Response Message-->
+    <xsd:complexType name="SASDeegistrationResponseType">
+        <xsd:sequence>
+            <xsd:element name="StatusCode" type="core:StatusCodeType"/>
+            <xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="acquisitionPointIdentity" type="core:NonEmptyStringType" use="required">
+            <xsd:annotation>
+                <xsd:documentation> A unique identity of the acquisition point. </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="sasToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>Optional sasToken as passed in the SASRegistrationRequest.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:anyAttribute namespace="##any" processContents="lax"/>
+    </xsd:complexType>
+    <!-- Service Check Request Message-->
+    <xsd:complexType name="SPSDeregistrationRequestType">
+        <xsd:sequence>
+            <xsd:element name="StatusCode" type="core:StatusCodeType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>Provides return status information to the caller and is
+                        returned for all errors. May optionally be included in a response payload to
+                        provide warning or informational details.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="signalProcessingIdentity" type="core:NonEmptyStringType" use="required">
+            <xsd:annotation>
+                <xsd:documentation> A unique identity of the signal processing system. </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="sasToken" type="xsd:token" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>Reference to a previous SASRegistrationRequest
+                    message.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="spsToken" type="xsd:token" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>Reference to a previous SPSRegistrationRequest message.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:anyAttribute namespace="##any" processContents="lax"/>
+    </xsd:complexType>
+    <xsd:complexType name="SPSDeegistrationResponseType">
+        <xsd:sequence>
+            <xsd:element name="StatusCode" type="core:StatusCodeType"/>
+            <xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="signalProcessingIdentity" type="core:NonEmptyStringType" use="required">
+            <xsd:annotation>
+                <xsd:documentation> A unique identity of the signal processing system. </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="spsToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>Optional spsToken for the SPS. This token should appear in any messages exchanged between the SAS and SPS.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="sasToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>Optional sasToken as passed in the SASRegistrationRequest.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:anyAttribute namespace="##any" processContents="lax"/>
+    </xsd:complexType>
+    <xsd:complexType name="ServiceCheckRequestType">
+        <xsd:annotation>
+            <xsd:documentation>An end point SHALL send a ServiceStatusNotification in response to a ServiceCheckRequest message. </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="identity" type="core:NonEmptyStringType" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Contains SPS identity if the SPS is sending the message. Contains SAS identity if the SAS is sending the message.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="spsToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>Optional spsToken for the SPS. This token should appear in any messages exchanged between the SAS and SPS.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="sasToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>Optional sasToken as recieved in an SASRegistrationRequest. The sasToken should appear in any messages exchanged betweened the SAS and SPS. </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:anyAttribute namespace="##any" processContents="lax"/>
+    </xsd:complexType>
+    <!--Service Status Notification Message-->
+    <xsd:complexType name="ServiceStatusNotificationType">
+        <xsd:annotation>
+            <xsd:documentation>A ServiceStatusNotification SHALL be sent in response to a ServiceCheckRequest message. A ServiceStatusNotification MAY be sent asynchronously to notify an end point of a change of status.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="StatusCode" type="core:StatusCodeType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>Provides return status information to the caller and is
+                        returned for all errors. May optionally be included in a response payload to
+                        provide warning or informational details.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="identity" type="core:NonEmptyStringType" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Contains SPS identity if the SPS is sending the message. Contains SAS identity if the SAS is sending the message.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="spsToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>Optional spsToken for the SPS. This token should appear in any messages exchanged between the SAS and SPS.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="sasToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>Optional sasToken as recieved in an SASRegistrationRequest. The sasToken should appear in any messages exchanged betweened the SAS and SPS. </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:anyAttribute namespace="##any" processContents="lax"/>
+    </xsd:complexType>
+    <!--                           -->
+    <!-- Processing Notification Type - message to acquisition point to direct processing of signals -->
+    <!--                           -->
+    <xsd:complexType name="ProcessingNotificationType" abstract="true">
+        <xsd:annotation>
+            <xsd:documentation> Processing Notification Type - message to acquisition point to
+                direct processing </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="BatchInfo" type="BatchInfoType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>Supplied with SignalProcessingNotification invoked for batch
+                        processing. A shource is required. Zero, one or more destinations can be
+                        provided.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="StatusCode" type="core:StatusCodeType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>Provides return status information to the caller and is
+                        returned for all errors. May optionally be included in a response payload to
+                        provide warning or informational details.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="signalProcessingIdentity" type="core:NonEmptyStringType" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Unique identity of the signal processing system.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="acquisitionPointIdentity" type="core:NonEmptyStringType">
+            <xsd:annotation>
+                <xsd:documentation> A unique identity of the acquisition point. </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="spsToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>Optional spsToken for the SPS. This token is from the last SPS registration.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="sasToken" type="xsd:token">
+            <xsd:annotation>
+                <xsd:documentation>Optional sasToken as recieved in an SASRegistrationRequest.  </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:anyAttribute namespace="##any" processContents="lax">
+            <xsd:annotation>
+                <xsd:documentation>In addition to the attributes defined, signal processing
+                    notification may include additional, custom attributes as needed by the
+                    application.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:anyAttribute>
+    </xsd:complexType>
+    <!---->
+    <!--***** Start Common Message Bases *****-->
+    <!-- Common message bases used by all messages-->
+    <!--***** End Common Message Elements *****-->
+    <!---->
+    <!--                        -->
+    <!-- Simple types -->
+    <!--                        -->
+    <!---->
+    <!--Batch ID Type - format of a batch identifier -->
+    <!---->
+    <xsd:simpleType name="BatchIDType">
+        <xsd:annotation>
+            <xsd:documentation>The identity of a batch. Should be Universally Unique Identifier as
+                defined by RFC 4122</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="core:NonEmptyStringType"/>
+    </xsd:simpleType>
+    <xsd:complexType name="SPSCalloutsType">
+        <xsd:annotation>
+            <xsd:documentation>SPS Callouts Type is used to communicate one or more SPS end points.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="unbounded" name="SPSCallout" type="CalloutType">
+                <xsd:annotation>
+                    <xsd:documentation>SPS Callouts - end points for SAS to call for
+                        specfied funcstions.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="SPSAttribute" maxOccurs="unbounded" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>SPS Attributes.</xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType mixed="true">
+                    <xsd:complexContent mixed="true">
+                        <xsd:extension base="xsd:anyType">
+                            <xsd:attribute name="attributeName" type="core:NonEmptyStringType"
+                                           use="required">
+                                <xsd:annotation>
+                                    <xsd:documentation>Name of attribute in name/value
+                                        pair.</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:attribute>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="spsEndPointName" type="core:NonEmptyStringType" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Name of the SPS End Point the call outs apply
+                    to.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:element name="SPSCallouts" type="SPSCalloutsType"/>
+</xsd:schema>

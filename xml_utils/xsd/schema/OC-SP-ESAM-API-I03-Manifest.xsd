@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:core="urn:cablelabs:md:xsd:core:3.0"
+	xmlns:sig="urn:cablelabs:md:xsd:signaling:3.0"
+	xmlns="urn:cablelabs:iptvservices:esam:xsd:manifest:1"
+	targetNamespace="urn:cablelabs:iptvservices:esam:xsd:manifest:1" elementFormDefault="qualified"
+	attributeFormDefault="unqualified" version="1">
+	<xsd:annotation>
+		<xsd:documentation>
+			<p>
+				<b>Copyright (c)2013, Cable Television Laboratories, Inc.</b>
+				<b>ESAM Manifest XML Schema, Release Version I03</b>
+				<b>Real-time Event Signaling and Management API</b>
+				<b>This schema is a normative component of CableLabs® Real-time Event
+					Signaling and Management API Specification,
+					OC-SP-ESAM-API-I03-xxxxxx</b>
+			</p>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:import namespace="urn:cablelabs:md:xsd:core:3.0" schemaLocation="MD-SP-CORE-I02.xsd"/>
+	<xsd:import namespace="urn:cablelabs:md:xsd:signaling:3.0"
+		schemaLocation="MD-SP-SIGNALING-I02.xsd"/>
+	<!--                                                 -->
+	<!-- Event containers                        -->
+	<!-- Submit a signal for processing    -->
+	<xsd:element name="ManifestConfirmConditionEvent" type="ManifestConfirmConditionEventType">
+		<xsd:annotation>
+			<xsd:documentation>Container for forwarding a signal to a confirmation and conditioning
+				endpoint. </xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<!-- Return message on processing of a signal, also used for out of band notification -->
+	<xsd:element name="ManifestConfirmConditionNotification"
+		type="ManifestConfirmConditionNotificationType">
+		<xsd:annotation>
+			<xsd:documentation>Container for exchanging manifest conditioning instructions</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<!--                        -->
+	<!-- Complex types -->
+	<!--                        -->
+	<!--                        -->
+	<!-- ManifestConfirmConditionEventType - Type to carry one or more acquisition point info types across an interface -->
+	<!--                        -->
+	<xsd:complexType name="ManifestConfirmConditionEventType">
+		<xsd:annotation>
+			<xsd:documentation>Type to carry one or more acquisition point info types across an
+				interface</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="AcquiredSignal" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation/>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="sig:AcquisitionPointInfoType"/>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>In addition to the attributes defined, acquisition point info may
+					include additional, custom attributes as needed by the
+					application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!--                           -->
+	<!-- ManifestConfirmConditionNotificationType - message to acquisition point to direct conditioning of manifest -->
+	<!--                           -->
+	<xsd:complexType name="ManifestConfirmConditionNotificationType">
+		<xsd:sequence>
+			<xsd:element name="ManifestResponse" type="ManifestResponseType"/>
+			<xsd:element name="StatusCode" type="core:StatusCodeType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Provides return status information to the caller and is returned for all errors. May optionally be included in a response payload to provide warning or informational details.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>In addition to the attributes defined, acquisition point info may
+					include additional, custom attributes as needed by the
+					application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!--                   -->
+	<!-- ManifestResponseType - details how to manipulate the ABR manifest -->
+	<!--                   -->
+	<xsd:complexType name="ManifestResponseType">
+		<xsd:sequence>
+			<xsd:element name="SegmentModify" type="SegmentModifyType" minOccurs="0"/>
+			<xsd:element name="SegmentReplace" type="SegmentReplaceType" minOccurs="0"/>
+			<xsd:element name="SparseTrack" type="SparseTrackType" minOccurs="0"
+				maxOccurs="unbounded"/>
+			<xsd:element name="SecurityMetadata" type="xsd:anyType" minOccurs="0"/>
+			<xsd:element name="TemplateResponse" type="TemplateResponseType" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attribute name="acquisitionPointIdentity" type="core:NonEmptyStringType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>A unique identity of the acquisition point. (ex.
+					MUX5)</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="acquisitionSignalID" type="sig:AcquisitionSignalIDType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>A globally unique ID for the point
+					referenced.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="signalPointID" type="core:URIIdType">
+			<xsd:annotation>
+				<xsd:documentation>Identifier for this entity. Use core:AssetRefType when
+					referencing a signalPointID. NOTE: not to be confused with the
+					acquisitionSignalID generated by an acquisition device if this signal is
+					instantiated based on receipt of some instream signaling.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="duration" type="xsd:duration" use="optional"/>
+		<xsd:attribute name="dataPassThrough" type="xsd:boolean"/>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>In addition to the attributes defined, acquisition point info may
+					include additional, custom attributes as needed by the
+					application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!--                   -->
+	<!-- SegmentModifyType - segment modification for HLS manifest -->
+	<!--                   -->
+	<xsd:complexType name="SegmentModifyType">
+		<xsd:sequence>
+			<xsd:element name="FirstSegment" type="TagSequence" minOccurs="0"/>
+			<xsd:element name="SpanSegment" type="TagSequence" minOccurs="0"/>
+			<xsd:element name="LastSegment" type="TagSequence" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!--                   -->
+	<!-- SegmentReplaceType - segment modification for HLS manifest -->
+	<!--                   -->
+	<xsd:complexType name="SegmentReplaceType">
+		<xsd:sequence>
+			<xsd:element name="Segment" type="SegmentType" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!--                   -->
+	<!-- Segment - segment -->
+	<!--                   -->
+	<xsd:complexType name="SegmentType">
+		<xsd:sequence>
+			<xsd:element name="Tag" type="TagType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="duration"/>
+		<xsd:attribute name="extinf" use="required"/>
+		<xsd:attribute name="uri" use="required"/>
+	</xsd:complexType>
+	<!--                   -->
+	<!-- TagType - manifest tag lines to be inserted into an HLS manifest -->
+	<!--                   -->
+	<xsd:complexType name="TagType">
+		<xsd:attribute name="adapt" type="xsd:boolean" use="optional"/>
+		<xsd:attribute name="locality" use="optional">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="before"/>
+					<xsd:enumeration value="within"/>
+					<xsd:enumeration value="after"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+		<xsd:attribute name="value" type="xsd:string" use="required"/>
+	</xsd:complexType>
+	<!--                   -->
+	<!-- SparseTrackType - information to place into a sparse text track -->
+	<!--                   -->
+	<xsd:complexType name="SparseTrackType">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:base64Binary">
+				<xsd:attribute name="trackName" type="xsd:string" use="optional"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<!--                   -->
+	<!-- TagSequence - a sequence of tags to be inserted into an HLS manifest -->
+	<!--                   -->
+	<xsd:complexType name="TagSequence">
+		<xsd:sequence>
+			<xsd:element name="Tag" type="TagType" minOccurs="1" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!--			-->
+	<!--  TemplateResponseType - Defines the parameters for the template response -->
+	<!--  The template shall be used to condition the manifest output with the data from the incoming SCTE-35 message.-->
+	<!--			-->
+	<xsd:complexType name="TemplateResponseType">
+		<xsd:attribute name="validDuration" type="xsd:duration"/>
+		<xsd:attribute name="templateType" type="xsd:string"/>
+	</xsd:complexType>
+</xsd:schema>

@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:cablelabs:md:xsd:signaling:3.0" xmlns:core="urn:cablelabs:md:xsd:core:3.0" targetNamespace="urn:cablelabs:md:xsd:signaling:3.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1">
+	<xsd:import namespace="urn:cablelabs:md:xsd:core:3.0" schemaLocation="MD-SP-CORE-I02.xsd"/>
+	<xsd:complexType name="SignalGroupAssetType">
+		<xsd:annotation>
+			<xsd:documentation>SignalGroupAssetType is an extension of the CableLabs 3 AssetType.  Implementers which do not deal with CableLabs Assets may safely ignore this type.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="core:AssetType">
+				<xsd:sequence>
+					<xsd:element name="SignalPoint" type="SignalPointType" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>One or more SignalPoint elements that exist in an asset.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="SignalRegion" type="SignalRegionType" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>One or more SignalRegion elements that exist in an asset.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!--                              -->
+	<!-- Element definitions -->
+	<!--                              -->
+	<xsd:element name="SignalGroup" type="SignalGroupType">
+		<xsd:annotation>
+			<xsd:documentation>Container for a collection of signals. Signal Group can contain one or more Signal Points and/or Signal Regions</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="AcquiredSignal" type="AcquisitionPointInfoType">
+		<xsd:annotation>
+			<xsd:documentation>Container for passing a signal from an acquisition point</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<!--                        -->
+	<!-- Complex types -->
+	<xsd:complexType name="BinarySignalType">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:base64Binary">
+				<xsd:attribute name="signalType" use="required">
+					<xsd:annotation>
+						<xsd:documentation>Specifies the type of signal contained in this element.</xsd:documentation>
+					</xsd:annotation>
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:pattern value="SCTE35|EISS|binary|private:.+"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<!--                        -->
+	<!-- Signaled Point Info Type - data related to signals in live streams -->
+	<!--                        -->
+	<xsd:complexType name="SignaledPointInfoType">
+		<xsd:annotation>
+			<xsd:documentation>Specify information about a signaled point in a stream. The information may specfy information about an anticipated signal or be populated after the signal arrives.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="SignalValidityTimeRange" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Specify the time range the signal will be considered valid. For example, an SCTE 35 cue message may only be considered valid during a defined time range.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="SignalValidityTimeRangeType"/>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="SCTE35PointDescriptor" type="SCTE35PointDescriptorType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>For SCTE 35 cue messages with additional descriptive data the following can be used for matching incoming signals and/or populated with authoritative descriptive data received. For example, a match may be done on SCTE 35 Segmentaiton Descriptor information, on "providerAvailId" in the AvailDesciptorInfo on the SpliceInsert or various other means.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="StreamTimes" type="StreamTimesType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Authoritative StreamTimes contains one or more time values that are generated and interpreted by the underlying subsystem. While implementation specific, this data is intended to be passed as is through intervening systems unaltered.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="AcquisitionPointInfo" type="AcquisitionPointInfoType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>One or more AcquisitionPointInfo items can be passed in the structure. One use of this structure is in the case where signals for the same point are acquired from multiple acquisiiton points. Typically only one of the signals will be applied while multiple signals are actually received and communicated between subsystems. This structure allows a system to pass the data for all acquisition points. A diagnostic system is one consumer of such a fully populated structure.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attribute name="acquisitionSignalID" type="AcquisitionSignalIDType">
+			<xsd:annotation>
+				<xsd:documentation>The authoritative ID of the signal. This ID may be carried forward from the acquisition sytem to other system element in the delivery platform.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>In addition to the attributes defined, a signaled point may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!--                        -->
+	<!-- Acquisiton Point Info Type - informaiton about a specific acquisiton point -->
+	<!--                        -->
+	<xsd:complexType name="AcquisitionPointInfoType">
+		<xsd:annotation>
+			<xsd:documentation>Acquisiton Point Info Type - information about a specific acquisiton point</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:annotation>
+				<xsd:documentation>Information for each acquisition point</xsd:documentation>
+			</xsd:annotation>
+			<xsd:choice>
+				<xsd:element name="UTCPoint" type="UTCPointDescriptorType">
+					<xsd:annotation>
+						<xsd:documentation>UTC Zulu combined date and time encoding of the wall clock for the signal point (e.g., the splice time as referenced by the SCTE 35 splice_time, i.e., cue time). This UTC time value typically should not match the acquisitionTime value.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="NPTPoint" type="NPTPointDescriptorType">
+					<xsd:annotation>
+						<xsd:documentation>NPT point within the stream</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:choice>
+			<xsd:choice minOccurs="0">
+				<xsd:element name="SCTE35PointDescriptor" type="SCTE35PointDescriptorType">
+					<xsd:annotation>
+						<xsd:documentation>For SCTE 35 cue messages with additional descriptive data the following can be used for matching incoming signals and/or populated with descriptive data received. For example, a match may be done on "providerAvailId" in the AvailDesciptorInfo on the SpliceInsert.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="BinaryData" type="BinarySignalType">
+					<xsd:annotation>
+						<xsd:documentation>Typed HEX Binary Data to support passing typed unparsed binary data </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:choice>
+			<xsd:element name="StreamTimes" type="StreamTimesType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>StreamTimes contains one or  more time values that are generated and interpreted by the underlying subsystem. While implementation specific, this data is intended to be passed as is through intervening systems unaltered.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attribute name="acquisitionPointIdentity" type="core:NonEmptyStringType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>A unique identity of the acquisition point. (ex. MUX5)</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="acquisitionSignalID" type="AcquisitionSignalIDType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>A globally unique ID for the point referenced.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="acquisitionTime" type="xsd:dateTime">
+			<xsd:annotation>
+				<xsd:documentation>UTC Zulu combined date and time encoding of the wall clock when
+			the signal was captured (e.g., the SCTE 35 splice_info_section() acquisition
+			time). For SCTE 35, this time value is not the splice time as referenced by a
+			cue time or time_signal() but rather the date and time of when the signal was
+			received/encountered by the acquisition point. </xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="signalPointID" type="core:URIIdType">
+			<xsd:annotation>
+				<xsd:documentation>Identifier for this entity. Use core:AssetRefType when
+			referencing a signalPointID. NOTE: not to be confused with the
+			acquisitionSignalID generated by an acquisiton device if this signal is
+			instantiated based on receipt of some instream signaling.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>In addition to the attributes defined, acquisition point info may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!--                            -->
+	<!--  SignalGroupType -->
+	<!--                            -->
+	<xsd:complexType name="SignalGroupType">
+		<xsd:annotation>
+			<xsd:documentation>Specify a group of signal points and/or regions.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="SignalPoint" type="SignalPointType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>One or more SignalPoint elements that exist in an asset.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="SignalRegion" type="SignalRegionType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>One or more SignalRegion elements that exist in an asset.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>A signal group may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!--                              -->
+	<!-- Signal Region Type -->
+	<!--                              -->
+	<xsd:complexType name="SignalRegionType">
+		<xsd:annotation>
+			<xsd:documentation>Type definition for a region of interest. The region can be defined by reference or by fully describing each point that bounds the region. The End Point is optional since not all End Points are signaled (ex. SCTE 35 out point signals only)</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="AlternateId" type="core:URIIdType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Any number of alternate identifiers  that may be used to identify this region. For example, may be referenced by a shared POGroup with PORegion</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:choice>
+				<xsd:sequence>
+					<xsd:element name="StartPoint" type="SignalPointType">
+						<xsd:annotation>
+							<xsd:documentation>In line definition for a start point.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="EndPoint" type="SignalPointType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>In line definition for an end point. </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+				<xsd:sequence>
+					<xsd:element name="StartPointRef" type="core:AssetRefType">
+						<xsd:annotation>
+							<xsd:documentation>A pointer to the signal point identified by signalPointId. </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="EndPointRef" type="core:AssetRefType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Optional pointer to the signal point identified by signalPointId.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:choice>
+			<xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attribute name="signalRegionID" type="core:URIIdType">
+			<xsd:annotation>
+				<xsd:documentation>Identifier for this entity. Use core:AssetRefType when referencing a signalRegionID.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="duration" type="xsd:duration">
+			<xsd:annotation>
+				<xsd:documentation>Defines the effective duration of a signal region. Duration should only be used for regions that are signaled (ex. a SCTE 35 cue message for an out point that does not have a authoriative in point) that do not have a matching end signal. There is no known use case for using the duration attribute on an end point.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>A signal region may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!--                           -->
+	<!-- Signal Point Type -->
+	<!--                           -->
+	<xsd:complexType name="SignalPointType">
+		<xsd:annotation>
+			<xsd:documentation>Based type for signals</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="AlternateId" type="core:URIIdType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Any number of alternate identifiers  that may be used to identify this region. For example, may be referenced by a shared POGroup with POPoint</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="NPTPointDescriptor" type="NPTPointDescriptorType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Soruce of value may be: 1) Passed as part of a metadata package (ex. pitched VOD asset) 2) If signaled in the stream this is populated upon receipt of an authoritative signal 3) For an end point may be derived based on the start point plus a duration supplied from an external source.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="SignaledPointInfo" type="SignaledPointInfoType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Acquisition point information. If present the SignalPoint is instantiated based on receipt of a signal in the stream (ex. SCTE 35)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attribute name="signalPointID" type="core:URIIdType">
+			<xsd:annotation>
+				<xsd:documentation>Identifier for this entity. Use core:AssetRefType when referencing a signalPointID.
+
+NOTE: not to be confused with the acquisitionSignalID generated by an acquisiton device if this signal is instantiated based on receipt of some instream signaling.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>In addition to the attributes defined, a signal may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!--                          -->
+	<!-- SCTE 35 Splice Descriptor Type Definitions -->
+	<!--                       -->
+	<!-- AvailDescriptor -->
+	<!--                       -->
+	<xsd:complexType name="AvailDescriptorType">
+		<xsd:annotation>
+			<xsd:documentation>Type definition for an SCTE 35 avail descriptor. The avail descriptor contains an authorization identifier to be sent for an avail.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="providerAvailId" type="xsd:unsignedInt" use="required"/>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>In addition to the attributes defined, an avail descriptor may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!--                       -->
+	<!-- AvailDescriptor -->
+	<!--                       -->
+	<xsd:complexType name="DTMFDescriptorType">
+		<xsd:annotation>
+			<xsd:documentation>Type definition for an SCTE 35 DTMF descriptor. The DTMF descriptor allows a receiving device to generate a legacy analog DTMFsequence.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="preRoll" type="xsd:unsignedByte" use="optional"/>
+		<xsd:attribute name="dtmfCount" type="xsd:unsignedByte" use="optional"/>
+		<xsd:attribute name="dtmfChars" type="xsd:token"/>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>In addition to the attributes defined, a DTMF descriptor may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!--                    -->
+	<!-- UniqueDescriptorType -->
+	<!--                        -->
+	<xsd:complexType name="UniqueDescriptorType" mixed="false">
+		<xsd:annotation>
+			<xsd:documentation>SCTE 35 supports a specific list of descriptor types but recognizes other descriptors may be sent. The Unique descriptor type allows an implementaiton to handle such descriptors in an implementation specific manner.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="descriptorTag" type="xsd:unsignedByte" use="required">
+			<xsd:annotation>
+				<xsd:documentation>The 8-bit field that identifies each descriptor.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="descriptorData">
+			<xsd:annotation>
+				<xsd:documentation>The hexbinary coded bytes comprising the descriptor. The data may be no longer than 253 bytes.</xsd:documentation>
+			</xsd:annotation>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:hexBinary">
+					<xsd:maxLength value="253"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>In addition to the attributes defined, a unique descriptor may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!-- SegmentDescriptor -->
+	<!--                    -->
+	<xsd:complexType name="SegmentationDescriptorType">
+		<xsd:annotation>
+			<xsd:documentation>SCTE 35 Segmentation Descriptor Type consistent with SCTE 35 2007.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="segmentEventId" type="xsd:unsignedInt" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Unique segmentation identifier.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="segmentationEventCancelIndicator" type="xsd:boolean">
+			<xsd:annotation>
+				<xsd:documentation>Boolean value indicating if the event is canceled. Set to TRUE if canceled. If FALSE or  omitted the descriptor is valid.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="upidType" type="xsd:unsignedByte" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>A value from table 8-6 of SCTE35.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="upid" type="xsd:hexBinary">
+			<xsd:annotation>
+				<xsd:documentation>A upid coded per table 8-6 in SCTE35</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="segmentTypeId" type="xsd:unsignedByte" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>A value from table 8-7 of SCTE35.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="segmentNum" type="xsd:unsignedByte" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Segment number.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="segmentsExpected" type="xsd:unsignedByte" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Segments expected.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="duration" type="xsd:duration" use="optional"/>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>In addition to the attributes defined, a segmentation descriptor may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!--                       -->
+	<!-- SpliceInsertType -->
+	<!--                       -->
+	<xsd:complexType name="SpliceInsertType">
+		<xsd:annotation>
+			<xsd:documentation>Type definition for an SCTE 35 splice insert message. Splice insert messages are sent to signal the location of a splice point.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="spliceEventId" type="xsd:unsignedInt" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>A 32-bit unique splice event identifier</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="spliceEventCancelIndicator" type="xsd:boolean">
+			<xsd:annotation>
+				<xsd:documentation>Boolean value indicating if the event is canceled. Set to TRUE if canceled. If FALSE or  omitted the descriptor is valid.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="outOfNetworkIndicator" type="xsd:boolean" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Boolean indication of exiting or returning to the network (main essence) stream. A value of TRUE indicates exiting the network. A value of FALSE or if omitted indicates a return to network.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="uniqueProgramId" type="xsd:unsignedShort" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Unique identifier for the program.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="availNum" type="xsd:unsignedByte" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Avail number.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="availsExpected" type="xsd:unsignedByte" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Avails expected.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="duration" type="xsd:duration" use="optional"/>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>In addition to the attributes defined, a splice insert may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!--                                      -->
+	<!-- SCTE35 Point Descriptor -->
+	<!--                                      -->
+	<xsd:complexType name="SCTE35PointDescriptorType">
+		<xsd:annotation>
+			<xsd:documentation>Type definition for an SCTE 35 splice info section.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="SpliceInsert" type="SpliceInsertType" minOccurs="0"/>
+			<xsd:element name="AvailDescriptorInfo" type="AvailDescriptorType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="DTMFDescriptorInfo" type="DTMFDescriptorType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="SegmentationDescriptorInfo" type="SegmentationDescriptorType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="UniqueDescriptorInfo" type="UniqueDescriptorType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Generic descriptor conveyence mechanism for any descriptor except the AvailDescriptorInfo, the DTMFDescriptorInfo, and the SegmentationDescriptorInfo.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Ext" type="core:ExtType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="spliceCommandType" type="xsd:unsignedInt" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Splice command type from table 7-2 of SCTE35 which indicates the structure carrying the detailed information contained herein.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>In addition to the attributes defined, an SCTE 35 Point Descriptor may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!--                               -->
+	<!-- SCTE35 Point Type -->
+	<!--                               -->
+	<xsd:simpleType name="SCTE35PointType">
+		<xsd:annotation>
+			<xsd:documentation>SCTE35 point descriptor in SCTE35 clock tick format:</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="core:NonEmptyStringType">
+			<xsd:pattern value="[0-9]*"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!---->
+	<!--Acquisition Signal ID Type - format of a signal identifier sourced from the delivery network-->
+	<!---->
+	<xsd:simpleType name="AcquisitionSignalIDType">
+		<xsd:annotation>
+			<xsd:documentation>The identity of signal. Should be Universally Unique Identifier as defined by RFC 4122</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="core:NonEmptyStringType"/>
+	</xsd:simpleType>
+	<!--                                        -->
+	<!-- NPT Point Descriptor Type -->
+	<!--                                         -->
+	<xsd:complexType name="NPTPointDescriptorType">
+		<xsd:annotation>
+			<xsd:documentation>The NPT for a point that specifies a point of interest or the start
+				or end point of a region. NPT always has an nptPoint but may also include a date
+				constraint on the NPT. The date is useful when defining NPT offsets into what was
+				previously a live stream</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence minOccurs="0">
+			<xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attribute name="nptDate" type="NPTDateType">
+			<xsd:annotation>
+				<xsd:documentation>For live streams. NPT Date in xsd:date format. If nptDate is
+					present, nptPoint is offset from start of day. nptPoint wraps to 0 at UTC
+					mid-night.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="nptPoint" type="NPTPointType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>NPT point format:(ss.sss|EOS|BOS). If nptDate is present BOS is same as 00.000 and EOS is same as 86399.999</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>In addition to the attributes defined, NPT Point Descriptor may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!--                                                                                                                 -->
+	<!-- NPT Point  Type expressed as seconds with a fractional part for milliseconds -->
+	<!--                                                                                                                 -->
+	<xsd:simpleType name="NPTPointType">
+		<xsd:annotation>
+			<xsd:documentation>An NPT postition expressed as seconds with a fractional part for milliseconds </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="core:NonEmptyStringType">
+			<xsd:pattern value="[0-9]*\.[0-9]{3}|BOS|EOS"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!--                                                                                                                 -->
+	<!-- NPT Date  Type expressed as seconds with a fractional part for milliseconds -->
+	<!--                                                                                                                 -->
+	<xsd:simpleType name="NPTDateType">
+		<xsd:annotation>
+			<xsd:documentation>The date portion of NPT postition expressed as a date </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:date"/>
+	</xsd:simpleType>
+	<!--                                        -->
+	<!-- UTC Point Descriptor Type -->
+	<!-- for signals in live streams the xsd:dateTime of the point of interest -->
+	<!--                                         -->
+	<xsd:complexType name="UTCPointDescriptorType">
+		<xsd:annotation>
+			<xsd:documentation>Type to hold the UTC time of a point.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence minOccurs="0">
+			<xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attribute name="utcPoint" type="UTCPointType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>UTC point.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>In addition to utcPoint, UTC Point Descriptor may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!--                                                                                                                 -->
+	<!-- UTC Point  Type expressed as XSD:dateTime-->
+	<!--                                                                                                                 -->
+	<xsd:simpleType name="UTCPointType">
+		<xsd:annotation>
+			<xsd:documentation> UTC Point  Type expressed as XSD:dateTime</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:dateTime">
+			<xsd:pattern value=".+T[^+\-]+Z"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!---->
+	<!-- Valid time range for a signal from the delivery network-->
+	<!---->
+	<xsd:complexType name="SignalValidityTimeRangeType">
+		<xsd:annotation>
+			<xsd:documentation>Specifies a bounded interval of time when a signal should be considered valid. If a signal arrives outside the valid time range it shall not be considered valid.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="UTCStart" type="UTCPointDescriptorType">
+				<xsd:annotation>
+					<xsd:documentation>Specifies the start of the valid time range.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="UTCEnd" type="UTCPointDescriptorType">
+				<xsd:annotation>
+					<xsd:documentation>Specifies the end of the valid time range.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attribute name="order" type="xsd:unsignedInt" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>If more than one signal shares the same expected arrive time range, order will contain an incrementing value, starting at 1, to drive the order of evaluation by a signal acquisition system.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>The valid time range may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!--                                                                                                                 -->
+	<!-- Types for carrying platform specific stream times. -->
+	<!--                                                                                                                 -->
+	<xsd:complexType name="StreamTimesType">
+		<xsd:annotation>
+			<xsd:documentation>StreamTimes contains one or  more time values that are generated and interpreted by an underlying subsystem. While implementation specific, this data is intended to be passed as is through intervening subsystems unaltered.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="StreamTime" type="StreamTimeType" maxOccurs="unbounded"/>
+			<xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>Stream times may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<xsd:complexType name="StreamTimeType">
+		<xsd:annotation>
+			<xsd:documentation>A single platform specific time comprised of a type and value pair.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence minOccurs="0">
+			<xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attribute name="timeType" type="core:NonEmptyStringType"/>
+		<xsd:attribute name="timeValue" type="core:NonEmptyStringType"/>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>In addition to the attributes defined, a stream time may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<xsd:element name="SignalGroupAsset" type="SignalGroupAssetType"/>
+</xsd:schema>

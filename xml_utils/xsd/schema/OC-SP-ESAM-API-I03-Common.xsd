@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:core="urn:cablelabs:md:xsd:core:3.0" xmlns:sig="urn:cablelabs:md:xsd:signaling:3.0" xmlns:content="urn:cablelabs:md:xsd:content:3.0" xmlns="urn:cablelabs:iptvservices:esam:xsd:common:1" targetNamespace="urn:cablelabs:iptvservices:esam:xsd:common:1" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1">
+	<xsd:annotation>
+		<xsd:documentation>
+			<p>
+				<b>Copyright (c)2013, Cable Television Laboratories, Inc.</b>
+				<b>ESAM Common XML Schema, Release Version I03</b>
+				<b>Real-time Event Signaling and Management API</b>
+				<b>This schema is a normative component of CableLabs® Real-time Event
+					Signaling and Management API Specification,
+					OC-SP-ESAM-API-I03-xxxxxx</b>
+			</p>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:import namespace="urn:cablelabs:md:xsd:core:3.0" schemaLocation="MD-SP-CORE-I02.xsd"/>
+	<xsd:import namespace="urn:cablelabs:md:xsd:content:3.0" schemaLocation="MD-SP-CONTENT-I02.xsd"/>
+	<xsd:import namespace="urn:cablelabs:md:xsd:signaling:3.0" schemaLocation="MD-SP-SIGNALING-I02.xsd"/>
+	<!--                                                 -->
+	<!--Submit a request for notifications related to a specific URI-->
+	<xsd:element name="UriProcessingRequest">
+		<xsd:annotation>
+			<xsd:documentation>Container for passing a Uri reference to a processing system that has descriptive data related to the specified uri</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+			</xsd:sequence>
+			<xsd:attribute name="acquisitionPointIdentity" type="core:NonEmptyStringType" use="required">
+				<xsd:annotation>
+					<xsd:documentation>A unique identity of the acquisition point. (ex.
+					MUX5)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="batchId" type="BatchIDType" use="required">
+				<xsd:annotation>
+					<xsd:documentation>A unique identifier for the Batch </xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="uriId" type="core:URIIdType" use="required">
+				<xsd:annotation>
+					<xsd:documentation>The identity of the underlying asset to process. Typically used for processing a file based asset that has associated descriptive data about points and regions of interest within an asset. </xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:anyAttribute namespace="##any" processContents="lax">
+				<xsd:annotation>
+					<xsd:documentation>In addition to the attributes defined, Uri Process Request may include additional, custom attributes as needed by the application.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:anyAttribute>
+		</xsd:complexType>
+	</xsd:element>
+	<!--Submit a request for notifications related to a specific stream-->
+	<xsd:element name="SignalStateRequest">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+			</xsd:sequence>
+			<xsd:attribute name="acquisitionPointIdentity" type="core:NonEmptyStringType" use="required">
+				<xsd:annotation>
+					<xsd:documentation>A unique identity of the acquisition point. (ex.
+						MUX5)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="uriId" type="core:URIIdType" use="required">
+				<xsd:annotation>
+					<xsd:documentation>The identity of the underlying asset to process. The PAID of the stream </xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:anyAttribute namespace="##any" processContents="lax"/>
+		</xsd:complexType>
+	</xsd:element>
+	<!--Acknowlege a process status notification-->
+	<xsd:element name="ProcessStatusAcknowledgement" type="ProcessStatusAcknowledgementType">
+		<xsd:annotation>
+			<xsd:documentation>Container for acknowledging a ProcessStatusNotification</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<!--Process status notification-->
+	<xsd:element name="ProcessStatusNotification" type="ProcessStatusNotificationType">
+		<xsd:annotation>
+			<xsd:documentation>Container to sending status of a processing request from the signal acquisition system and a signal processing system.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<!--Process status response-->
+	<xsd:element name="ProcessStatusResponse" type="ProcessStatusResponseType">
+		<xsd:annotation>
+			<xsd:documentation>Container for responding to a ProcessStatusRequest</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<!--Process status request-->
+	<xsd:element name="ProcessStatusRequest" type="ProcessStatusRequestType">
+		<xsd:annotation>
+			<xsd:documentation>Container to request status of a process from the signal acquisition system and a signal processing system.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<!--                        -->
+	<!-- Complex types -->
+	<!--                        -->
+	<!-- Batch Info Type - supplied when initiate a batch operation. For example, to process files based content like VOD or advertising. -->
+	<!--                   -->
+	<xsd:complexType name="BatchInfoType">
+		<xsd:sequence>
+			<xsd:element name="Source" type="content:MovieType" minOccurs="0"/>
+			<xsd:element name="Destination" type="content:MovieType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attribute name="batchId" type="BatchIDType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>A unique identifier for the Batch </xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>Batch info may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!--                        -->
+	<!-- Process Status Acknowlegement Type - acknowledge message to a process status notification-->
+	<!--                   -->
+	<xsd:complexType name="ProcessStatusAcknowledgementType">
+		<xsd:sequence>
+			<xsd:element name="StatusCode" type="core:StatusCodeType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Provides return status information to the caller and is returned for all errors. May optionally be included in a response payload to provide warning or informational details.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="acquisitionPointIdentity" type="core:NonEmptyStringType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>A unique identity of the acquisition point. (ex. MUX5)</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="acquisitionSignalID" type="sig:AcquisitionSignalIDType" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>A globally unique ID for the point referenced.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="batchId" type="BatchIDType" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>A unique identifier for the Batch </xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>A process status acknowledgemetn may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!--                        -->
+	<!-- Process Status Notification Type - status notificaiton for a process-->
+	<!--                   -->
+	<xsd:complexType name="ProcessStatusNotificationType">
+		<xsd:sequence>
+			<xsd:element name="StatusCode" type="core:StatusCodeType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Provides return status information to the caller and is returned for all errors. May optionally be included in a response payload to provide warning or informational details.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="acquisitionPointIdentity" type="core:NonEmptyStringType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>A unique identity of the acquisition point. (ex. MUX5)</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="acquisitionSignalID" type="sig:AcquisitionSignalIDType" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>A globally unique ID for the point referenced.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="batchId" type="BatchIDType" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>A unique identifier for the Batch </xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>A process status notification may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!--                        -->
+	<!-- Process Status Response Type - response message sent in response to a process status request-->
+	<!--                   -->
+	<xsd:complexType name="ProcessStatusResponseType">
+		<xsd:sequence>
+			<xsd:element name="StatusCode" type="core:StatusCodeType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Provides return status information to the caller and is returned for all errors. May optionally be included in a response payload to provide warning or informational details.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="acquisitionPointIdentity" type="core:NonEmptyStringType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>A unique identity of the acquisition point. (ex. MUX5)</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="acquisitionSignalID" type="sig:AcquisitionSignalIDType" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>A globally unique ID for the point referenced.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="batchId" type="BatchIDType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>A unique identifier for the Batch </xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>A process status response may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!--                        -->
+	<!-- Process Status Reqeust Type - request status for a process-->
+	<!--                   -->
+	<xsd:complexType name="ProcessStatusRequestType">
+		<xsd:attribute name="acquisitionPointIdentity" type="core:NonEmptyStringType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>A unique identity of the acquisition point. (ex. MUX5)</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="acquisitionSignalID" type="sig:AcquisitionSignalIDType" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>A globally unique ID for the point referenced.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="batchId" type="BatchIDType">
+			<xsd:annotation>
+				<xsd:documentation>A unique identifier for the Batch </xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>A process status request may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!--                   -->
+	<!-- Conditioning Info Type - conditioning information (ex. adaptive bit rate) -->
+	<!--                        -->
+	<xsd:complexType name="ConditioningInfoType">
+		<xsd:annotation>
+			<xsd:documentation>Conditioning Into Type - Conditioning information communicated to an acquisition point. For example, communicate ABR (Adaptive Bit Rate) information.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="Segment" type="xsd:duration" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attribute name="duration" type="xsd:duration"/>
+		<xsd:attribute name="acquisitionSignalIDRef" type="sig:AcquisitionSignalIDType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>A globally unique ID for the point referenced.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="startOffset" type="xsd:duration" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Specifies a desired off-set start time for the scheduled signal.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!---->
+	<!--Signal Processing Event Type -  Type to carry one or more signals across an interface-->
+	<!---->
+	<xsd:complexType name="SignalProcessingEventType">
+		<xsd:annotation>
+			<xsd:documentation>Signal Processing Event Type - Type to carry one or more acquired signals across an interface</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="AcquiredSignal" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Container for passing a signal from an acquisition point.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="sig:AcquisitionPointInfoType"/>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>In addition to the attributes defined, Signal Processing Event may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!--                           -->
+	<!-- Processing Notification Type - message to acquisition point to direct processing of signals -->
+	<!--                           -->
+	<xsd:complexType name="ProcessingNotificationType" abstract="true">
+		<xsd:annotation>
+			<xsd:documentation> Processing Notification Type - message to acquisition point to direct processing </xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="BatchInfo" type="BatchInfoType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Supplied with SignalProcessingNotification invoked for batch processing. A shource is required. Zero, one or more destinations can be provided.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="StatusCode" type="core:StatusCodeType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Provides return status information to the caller and is returned for all errors. May optionally be included in a response payload to provide warning or informational details.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Ext" type="core:ExtType" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attribute name="acquisitionPointIdentity" type="core:NonEmptyStringType">
+			<xsd:annotation>
+				<xsd:documentation> A unique identity of the acquisition point. </xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:anyAttribute namespace="##any" processContents="lax">
+			<xsd:annotation>
+				<xsd:documentation>In addition to the attributes defined, signal processing notification may include additional, custom attributes as needed by the application.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:anyAttribute>
+	</xsd:complexType>
+	<!--                        -->
+	<!-- Simple types -->
+	<!--                        -->
+	<!---->
+	<!--Batch ID Type - format of a batch identifier -->
+	<!---->
+	<xsd:simpleType name="BatchIDType">
+		<xsd:annotation>
+			<xsd:documentation>The identity of a batch. Should be Universally Unique Identifier as defined by RFC 4122</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="core:NonEmptyStringType"/>
+	</xsd:simpleType>
+</xsd:schema>

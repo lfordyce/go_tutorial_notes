@@ -1,10 +1,13 @@
 package decorator
 
 import (
+	"encoding/base64"
 	"fmt"
 	"log"
 	"math/rand"
+	"net/url"
 	"sort"
+	"strings"
 	"sync"
 	"time"
 )
@@ -130,4 +133,88 @@ func Chain(outer AdderMiddleware, middleware ...AdderMiddleware) AdderMiddleware
 		}
 		return outer(a)
 	}
+}
+
+type fnString func(string) string
+
+func compose2(a fnString, b fnString) fnString {
+	return func(s string) string {
+		return a(b(s))
+	}
+}
+
+func compose(fns ...fnString) fnString {
+	return func(s string) string {
+		f := fns[0]
+		fs := fns[1:]
+
+		if len(fns) == 1 {
+			return f(s)
+		}
+		return f(compose(fs...)(s))
+	}
+}
+
+type fnUrl func(url.URL) url.URL
+
+func composeUrl(fns ...fnUrl) fnUrl {
+	return func(s url.URL) url.URL {
+		f := fns[0]
+		fs := fns[1:]
+		if len(fns) == 1 {
+			return f(s)
+		}
+		return f(composeUrl(fs...)(s))
+	}
+}
+
+func changeScheme(s string) fnUrl {
+	return func(i url.URL) url.URL {
+		i.Scheme = s
+		return i
+	}
+}
+
+func addPathToUrl(path string) fnUrl {
+	return func(i url.URL) url.URL {
+		fmt.Println(i.Scheme)
+		urlPath := url.URL{Path: path}
+		i = *i.ResolveReference(&urlPath)
+		return i
+	}
+}
+
+type StringManipulator func(string) string
+
+func ToLower(m StringManipulator) StringManipulator {
+	return func(s string) string {
+		lower := strings.ToLower(s)
+		return m(lower)
+	}
+}
+
+func ToBase64(m StringManipulator) StringManipulator {
+	return func(s string) string {
+		b64 := base64.StdEncoding.EncodeToString([]byte(s))
+		return m(b64)
+	}
+}
+
+func AppendDecorator(x string) func(m StringManipulator) StringManipulator {
+	return func(m StringManipulator) StringManipulator {
+		return func(s string) string {
+			return m(s + x)
+		}
+	}
+}
+
+func PrependDecorator(x string, m StringManipulator) StringManipulator {
+	return func(s string) string {
+		return m(x + s)
+	}
+}
+
+// "identity" just return the same string
+func ident(s string) string {
+	return s
 }

@@ -3,8 +3,10 @@ package decorator
 import (
 	"fmt"
 	"log"
+	"net/url"
 	"os"
 	"sort"
+	"strings"
 	"sync"
 	"testing"
 )
@@ -65,9 +67,16 @@ func TestAdderCach(t *testing.T) {
 		},
 	)
 
-	a = WrapCache(&sync.Map{})(a)
+	i := &sync.Map{}
+	a = WrapCache(i)(a)
+	a.Add(5, 6)
 
-	fmt.Println(Do(a))
+	value, ok := i.Load("x=5y=6")
+	if ok {
+		fmt.Println(value)
+	}
+
+	//fmt.Println(Do(a))
 }
 
 func TestAdderChainMiddleware(t *testing.T) {
@@ -82,4 +91,40 @@ func TestAdderChainMiddleware(t *testing.T) {
 	)(a)
 
 	a.Add(10, 20)
+}
+
+func TestCompose(t *testing.T) {
+	raw := "\n\n\nHello Golang!!!\n\n\n"
+	trim := strings.TrimSpace
+	trimExclamation := func(s string) string {
+		return strings.Trim(s, "!")
+	}
+	toLower := strings.ToLower
+
+	s := compose(toLower, trimExclamation, trim)(raw)
+	fmt.Println(s)
+}
+
+func TestComposeUrl(t *testing.T) {
+	raw := "halo://prdtll3ep005f:8080"
+	parse, _ := url.Parse(raw)
+
+	i := composeUrl(
+		changeScheme("http"),
+		addPathToUrl(fmt.Sprintf("ui/liveencoder/%s/stats", "some-ID")),
+	)(*parse)
+
+	fmt.Println(i.String())
+}
+
+func TestAppendDecorator(t *testing.T) {
+	s := "Hello, playground"
+
+	var fn StringManipulator = ident
+
+	fmt.Println(fn(s))
+
+	fn = ToBase64(ToLower(fn))
+	fmt.Println(fn(s))
+
 }

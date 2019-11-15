@@ -1,5 +1,7 @@
 package utils
 
+import "strings"
+
 type Weekday int
 
 const (
@@ -50,4 +52,17 @@ func (day Weekday) Weekend() bool {
 	default:
 		return false
 	}
+}
+
+func customSplitter(s string, splits string) []string {
+	m := make(map[rune]int)
+	for _, r := range splits {
+		m[r] = 1
+	}
+
+	splitter := func(r rune) bool {
+		return m[r] == 1
+	}
+
+	return strings.FieldsFunc(s, splitter)
 }
