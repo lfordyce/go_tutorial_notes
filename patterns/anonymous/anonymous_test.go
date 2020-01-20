@@ -12,7 +12,7 @@ func TestAnonymousAbstractThing(t *testing.T) {
 
 	// we use an anonymous function which satisfies the interface
 	// The trick here is to pass the function to our DoThingWith type
-	app.DoThing(DoThingWith(func() {
+	app.DoThing(DoThingWithFunc(func() {
 		fmt.Println("Hey interface, are you satisfied?")
 	}))
 }
