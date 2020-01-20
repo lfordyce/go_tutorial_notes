@@ -1,8 +1,9 @@
-package pubsub
+package redis
 
 import (
 	"fmt"
 	"github.com/go-redis/redis"
+	"github.com/lfordyce/generalNotes/pubsub"
 	"sync"
 	"time"
 )
@@ -19,6 +20,7 @@ func WithClient(c *redis.Client) Option {
 	}
 }
 
+// Transport is a vice.Transport for redis.
 type Transport struct {
 	sendChans    map[string]chan []byte
 	receiveChans map[string]chan []byte
@@ -34,7 +36,8 @@ type Transport struct {
 	client *redis.Client
 }
 
-func New(opts ...Option) *Transport {
+// New returns a new transport
+func New(opts ...Option) pubsub.Transport {
 	var options Options
 	for _, o := range opts {
 		o(&options)
@@ -56,6 +59,7 @@ func (t *Transport) newConnection() (*redis.Client, error) {
 	if t.client != nil {
 		return t.client, nil
 	}
+
 	t.client = redis.NewClient(&redis.Options{
 		Network:    "tcp",
 		Addr:       "127.0.0.1:6379",

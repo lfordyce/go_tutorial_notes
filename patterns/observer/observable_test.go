@@ -25,6 +25,7 @@ func TestObserver_Observe(t *testing.T) {
 		<-time.After(1 * time.Second)
 		o.Notify(3)
 	}()
+
 	go func() {
 		<-time.After(3 * time.Second)
 		o.Notify(5)

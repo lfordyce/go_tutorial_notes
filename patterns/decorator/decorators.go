@@ -21,7 +21,6 @@ func TimedSortFunc(f SortFunc) SortFunc {
 		defer func(t time.Time) {
 			fmt.Printf("--- Time Elapsed: %v ---\n", time.Since(t))
 		}(time.Now())
-
 		f(data)
 	}
 }

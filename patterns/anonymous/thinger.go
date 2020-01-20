@@ -11,12 +11,12 @@ type AbstractThing interface {
 	DoThing()
 }
 
-type DoThingWith func()
+type DoThingWithFunc func()
 
 // Satisfy AbstractThing interface.
 // So we can now pass an anonymous function using DoThingWith,
 // which implements AbstractThing
-func (thing DoThingWith) DoThing() {
+func (thing DoThingWithFunc) DoThing() {
 	thing()
 }
 

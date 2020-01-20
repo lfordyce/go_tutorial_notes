@@ -13,6 +13,7 @@ func TestYield(t *testing.T) {
 			}
 		}
 	}
+
 	iterator, cancel := mapperToIterator(myMapper)
 	defer cancel()
 	for value, notDone := iterator(); notDone; value, notDone = iterator() {
