@@ -3,13 +3,14 @@ package redis
 import (
 	"context"
 	"fmt"
-	"github.com/alicebob/miniredis/v2"
-	"github.com/go-redis/redis"
-	"github.com/lfordyce/generalNotes/pubsub"
 	"log"
 	"sync"
 	"testing"
 	"time"
+
+	"github.com/alicebob/miniredis/v2"
+	"github.com/go-redis/redis"
+	"github.com/lfordyce/generalNotes/pubsub"
 )
 
 // Greeter is a service that greets people.
@@ -157,6 +158,9 @@ func TestTransport(t *testing.T) {
 		PoolTimeout:  30 * time.Second,
 	})
 	pong, err := client.Ping().Result()
+	if err != nil {
+		t.Fatal(err)
+	}
 	fmt.Println(pong, err)
 
 	newT := func() pubsub.Transport {
@@ -276,4 +280,105 @@ func testStandardTransportBehaviour(t *testing.T, newTransport func() pubsub.Tra
 	}
 
 	// 	is.Equal(len(messages["vicechannel4.1"])+len(messages["vicechannel4.2"])+len(messages["vicechannel4.3"]), 100)
+}
+
+func TestStreams(t *testing.T) {
+	client, err := newRedisClient()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	//addCmd := client.XAdd(&redis.XAddArgs{
+	//	Stream: "accordion:io:lid:site",
+	//	Values: map[string]interface{}{
+	//		"site":   "H5",
+	//		"lid":    "l3-000000-dir-01",
+	//		"method": "switch",
+	//	},
+	//})
+	//
+	//newID, err := addCmd.Result()
+	//if err != nil {
+	//	t.Fatal(err)
+	//}
+	//fmt.Printf("stream entry ID: %v\n", newID)
+	// client.XRange(
+
+	//xmsgs, err := client.XRange("accordion:io:lid:site", "-", "+").Result()
+	//if err != nil {
+	//	t.Fatal(err)
+	//}
+
+	//streamID, err := client.XAdd(&redis.XAddArgs{
+	//	Stream: "accordion:io:lid:site:test",
+	//	Values: map[string]interface{}{
+	//		"type": string(SwitchType),
+	//		"data": &SwitchEvent{
+	//			Base: &Base{
+	//				ID: "l3-000000-dir-01",
+	//				Type: SwitchType,
+	//			},
+	//			Site: "Titan",
+	//		},
+	//	},
+	//}).Result()
+	streamID, err := client.XAdd(&redis.XAddArgs{
+		Stream: "accordion:io:lid:site",
+		Values: map[string]interface{}{
+			"site":   "H5",
+			"lid":    "l3-000000-dir-01",
+			"method": "switch",
+			//"type": string(SwitchType),
+			//"data": &SwitchEvent{
+			//	Base: &Base{
+			//		ID: "l3-000000-dir-01",
+			//		Type: SwitchType,
+			//	},
+			//	Site: "Titan",
+			//},
+		},
+	}).Result()
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println(streamID)
+
+	result, err := client.XRange("accordion:io:lid:site", "-", "+").Result()
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println(result)
+
+	client.XRead(&redis.XReadArgs{
+		Streams: []string{"accordion:io:lid:site:test"},
+		Count:   0,
+		Block:   0,
+	})
+
+	//for _, r := range result {
+	//	start := r.ID
+	//	fmt.Println(start)
+	//
+	//	m := r.Values["type"].(string)
+	//	event, err := NewEvent(Type(m))
+	//	if err != nil {
+	//		t.Fatal(err)
+	//	}
+	//	if err := event.UnmarshalBinary([]byte(r.Values["data"].(string))); err != nil {
+	//		t.Fatal(err)
+	//	}
+	//	fmt.Println(event)
+	//}
+}
+
+func newRedisClient() (*redis.Client, error) {
+	client := redis.NewClient(&redis.Options{
+		ReadTimeout: time.Second * 60,
+		Addr:        "127.0.0.1:6379",
+		Password:    "KAFSFKA2BFSJALKakf21fsaf",
+		//DB:       1, // use default DB
+	})
+
+	_, err := client.Ping().Result()
+	return client, err
 }

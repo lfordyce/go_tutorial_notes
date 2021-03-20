@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ADI SYSTEM "ADI.DTD">
+<ADI>
+    <Metadata>
+        <AMS Asset_Class="package" Asset_ID="BLMB1562087506000000" Asset_Name="ce3dbb35-2215-442f-bb97-cb5b428a224d Title" Product="SVOD" Version_Minor="0" Creation_Date="2019-06-27" Provider="Bloomberg" Description="NBA Working With Obama on Global Basketball Project, Deputy Commissioner Says" Provider_ID="bloomber.com" Version_Major="1" Verb=""/>
+        <App_Data App="VOD" Name="Metadata_Spec_Version" Value="CableLabsVOD1.1"/>
+        <App_Data App="VOD" Name="Provider_Content_Tier" Value="bloomberg"/>
+    </Metadata>
+    <Asset>
+        <Metadata>
+            <AMS Asset_Class="title" Asset_ID="BLMB15620875060000001" Creation_Date="2019-06-27" Asset_Name="ce3dbb35-2215-442f-bb97-cb5b428a224d Title" Product="SVOD" Version_Minor="0" Verb="" Provider="Bloomberg" Description="NBA Working With Obama on Global Basketball Project, Deputy Commissioner Says" Provider_ID="bloomber.com" Version_Major="1"/>
+            <App_Data App="VOD" Name="Run_Time" Value="00:05"/>
+            <App_Data App="VOD" Name="Show_Type" Value="Series"/>
+            <App_Data App="VOD" Name="Title_Brief" Value="NBA Working With Obama on Global Basketball Project, Deputy Commissioner Says"/>
+            <App_Data App="VOD" Name="Year" Value="2019"/>
+            <App_Data App="VOD" Name="Licensing_Window_End" Value="2020-06-04"/>
+            <App_Data App="VOD" Name="Licensing_Window_Start" Value="2019-06-04"/>
+            <App_Data App="VOD" Name="Category" Value="Home/News"/>
+            <App_Data App="VOD" Name="Category" Value="Home/Finance"/>
+            <App_Data App="VOD" Name="Category" Value="TV/Home/News"/>
+            <App_Data App="VOD" Name="Genre" Value="Series"/>
+            <App_Data App="VOD" Name="Genre" Value="News"/>
+            <App_Data App="VOD" Name="Genre" Value="Finance"/>
+            <App_Data App="VOD" Name="Provider_QA_Contact" Value="mgarcia226@bloomberg.net"/>
+            <App_Data App="VOD" Name="Title" Value="NBA Working With Obama on Global Basketball Project, Deputy Commissioner Says"/>
+            <App_Data App="VOD" Name="Display_Run_Time" Value="00:05"/>
+            <App_Data App="VOD" Name="Summary_Short" Value="Jun.04 -- Mark Tatum, deputy commissioner and chief operating officer of the National Basketball Association, discusses the NBA&apos;s international appeal, former President Barack Obama&apos;s passion for basketball and the growth of the sports-betting industry with Bloomberg&apos;s Shery Ahn and Jon Erlichman on Bloomberg Markets."/>
+        </Metadata>
+        <Asset>
+            <Metadata>
+                <AMS Asset_Class="movie" Asset_ID="BLMB15620875060000002" Product="SVOD" Version_Minor="0" Creation_Date="2019-06-27" Asset_Name="ce3dbb35-2215-442f-bb97-cb5b428a224d Title" Provider_ID="bloomber.com" Version_Major="1" Verb="" Provider="Bloomberg" Description="NBA Working With Obama on Global Basketball Project, Deputy Commissioner Says"/>
+                <App_Data App="VOD" Name="Content_FileSize" Value="393344"/>
+                <App_Data App="VOD" Name="Bit_Rate" Value="1000"/>
+                <App_Data App="VOD" Name="Frame_Rate" Value="24"/>
+                <App_Data App="VOD" Name="Content_CheckSum" Value="0cfb02215ef8c99a4da7a5bcd6c786d5"/>
+                <App_Data App="VOD" Name="Codec" Value="video/mp4"/>
+                <App_Data App="VOD" Name="Resolution" Value="1080"/>
+                <App_Data App="VOD" Name="Type" Value="movie"/>
+                <App_Data App="VOD" Name="Audio_Type" Value="Stereo"/>
+            </Metadata>
+            <Content Value="INTVx3wsbx0701d_5000.mp4"/>
+        </Asset>
+    </Asset>
+</ADI>

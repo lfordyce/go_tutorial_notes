@@ -15,6 +15,6 @@ func TestWeekday_String(t *testing.T) {
 func TestWeekday_Weekend(t *testing.T) {
 	got := Saturday.Weekend()
 	if got != true {
-		t.Errorf("got %s, want %t", got, true)
+		t.Errorf("got %v, want %t", got, true)
 	}
 }

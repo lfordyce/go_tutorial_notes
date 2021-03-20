@@ -11,20 +11,20 @@ import (
 	"time"
 )
 
-func take(done <-chan interface{}, valueStream <-chan interface{}, num int) <-chan interface{} {
-	takeStream := make(chan interface{})
-	go func() {
-		defer close(takeStream)
-		for i := 0; i < num; i++ {
-			select {
-			case <-done:
-				return
-			case takeStream <- <-valueStream:
-			}
-		}
-	}()
-	return takeStream
-}
+//func take(done <-chan interface{}, valueStream <-chan interface{}, num int) <-chan interface{} {
+//	takeStream := make(chan interface{})
+//	go func() {
+//		defer close(takeStream)
+//		for i := 0; i < num; i++ {
+//			select {
+//			case <-done:
+//				return
+//			case takeStream <- <-valueStream:
+//			}
+//		}
+//	}()
+//	return takeStream
+//}
 
 func repeatFn(done <-chan interface{}, fn func() interface{}) <-chan interface{} {
 	valueStream := make(chan interface{})

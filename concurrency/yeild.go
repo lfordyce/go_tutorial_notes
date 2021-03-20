@@ -32,6 +32,46 @@ func mapperToIterator(m mapperFn) (iteratorFn, cancelFn) {
 		})
 		close(generatedValues)
 	}()
+
+	iter := func() (value interface{}, notDone bool) {
+		value, notDone = <-generatedValues
+		return
+	}
+	return iter, func() {
+		stopCh <- nil
+	}
+}
+
+func mapperToIterator2(m mapperFn) (iteratorFn, cancelFn) {
+	generatedValues := make(chan interface{}, 1)
+	stopCh := make(chan interface{}, 1)
+
+	fn := func(obj interface{}) (stopIterating bool) {
+		select {
+		case <-stopCh:
+			return false
+		case generatedValues <- obj:
+			return true
+		}
+	}
+
+	go func() {
+		m(fn)
+		close(generatedValues)
+	}()
+
+	//go func() {
+	//	m(func(obj interface{}) (stopIterating bool) {
+	//		select {
+	//		case <-stopCh:
+	//			return false
+	//		case generatedValues <- obj:
+	//			return true
+	//		}
+	//	})
+	//	close(generatedValues)
+	//}()
+
 	iter := func() (value interface{}, notDone bool) {
 		value, notDone = <-generatedValues
 		return

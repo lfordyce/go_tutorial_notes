@@ -60,7 +60,9 @@ func mergePlexer(done <-chan bool, channels ...<-chan int) <-chan int {
 	var wg sync.WaitGroup
 
 	wg.Add(len(channels))
+
 	outgoingPackages := make(chan int)
+
 	multiplex := func(c <-chan int) {
 		defer wg.Done()
 		for i := range c {

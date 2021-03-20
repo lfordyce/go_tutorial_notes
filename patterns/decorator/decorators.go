@@ -26,7 +26,7 @@ func TimedSortFunc(f SortFunc) SortFunc {
 }
 
 // RandomHeroSort method for HeroScoreList
-func RandomHeroSort(size int, upperLimit int) HeroScoreList {
+func RandomHeroSort(size int, upperLimit int) sort.Interface {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	heroScores := make(HeroScoreList, size)
 

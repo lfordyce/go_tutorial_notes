@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ADI SYSTEM "ADI.DTD">
+<ADI>
+    <Metadata>
+        <AMS Version_Major="1" Version_Minor="0" Verb="" Asset_Class="package" Provider="bloomberg" Product="SVOD" Asset_Name="ce3dbb35-2215-442f-bb97-cb5b428a224d Package" Description="NBA Working With Obama on Global Basketball Project, Deputy Commissioner Says" Creation_Date="2019-06-04" Provider_ID="bloomberg.com" Asset_ID="ce3dbb35-2215-442f-bb97-cb5b428a224dPKG"/>
+        <App_Data App="SVOD" Name="Metadata_Spec_Version" Value="CableLabsVOD1.1"/>
+        <App_Data App="SVOD" Name="Provider_Content_Tier" Value="bloomberg"/>
+    </Metadata>
+    <Asset>
+        <Metadata>
+            <AMS Version_Major="1" Version_Minor="0" Verb="" Asset_Class="title" Provider="bloomberg" Product="SVOD" Asset_Name="ce3dbb35-2215-442f-bb97-cb5b428a224d Title" Description="NBA Working With Obama on Global Basketball Project, Deputy Commissioner Says" Creation_Date="2019-06-04" Provider_ID="bloomberg.com" Asset_ID="ce3dbb35-2215-442f-bb97-cb5b428a224dTIT"/>
+            <App_Data App="SVOD" Name="Type" Value="title"/>
+            <App_Data App="SVOD" Name="Title_Brief" Value="NBA Working With Obama on Global Basketball Project, Deputy Commissioner Says"/>
+            <App_Data App="SVOD" Name="Title" Value="NBA Working With Obama on Global Basketball Project, Deputy Commissioner Says"/>
+            <App_Data App="SVOD" Name="Summary_Short" Value="Jun.04 -- Mark Tatum, deputy commissioner and chief operating officer of the National Basketball Association, discusses the NBA's international appeal, former President Barack Obama's passion for basketball and the growth of the sports-betting industry with Bloomberg's Shery Ahn and Jon Erlichman on Bloomberg Markets."/>
+            <App_Data App="SVOD" Name="Run_Time" Value="00:05"/>
+            <App_Data App="SVOD" Name="Display_Run_Time" Value="00:05"/>
+            <App_Data App="SVOD" Name="Year" Value="2019"/>
+            <App_Data App="SVOD" Name="Show_Type" Value="Series"/>
+            <App_Data App="SVOD" Name="Licensing_Window_Start" Value="2019-06-04"/>
+            <App_Data App="SVOD" Name="Licensing_Window_End" Value="2020-06-04"/>
+            <App_Data App="SVOD" Name="Display_As_New" Value="0"/>
+            <App_Data App="SVOD" Name="Display_As_Last_Chance" Value="7"/>
+            <App_Data App="SVOD" Name="Provider_QA_Contact" Value="mgarcia226@bloomberg.net"/>
+        </Metadata>
+        <Asset>
+            <Metadata>
+                <AMS Version_Major="1" Version_Minor="0" Verb="" Asset_Class="movie" Provider="bloomberg" Product="SVOD" Asset_Name="ce3dbb35-2215-442f-bb97-cb5b428a224d Movie" Description="NBA Working With Obama on Global Basketball Project, Deputy Commissioner Says" Creation_Date="2019-06-04" Provider_ID="bloomberg.com" Asset_ID="ce3dbb35-2215-442f-bb97-cb5b428a224dMOV"/>
+                <App_Data App="SVOD" Name="Encryption" Value="N"/>
+                <App_Data App="SVOD" Name="Type" Value="movie"/>
+                <App_Data App="SVOD" Name="Audio_Type" Value="Stereo"/>
+                <App_Data App="SVOD" Name="HDContent" Value="Y"/>
+                <App_Data App="SVOD" Name="Copy_Protection" Value="N"/>
+                <App_Data App="SVOD" Name="Copy_Protection_Verbose" Value="N"/>
+                <App_Data App="SVOD" Name="Bit_Rate" Value="1000"/>
+                <App_Data App="SVOD" Name="Content_FileSize" Value="393344"/>
+                <App_Data App="SVOD" Name="Content_CheckSum" Value="0cfb02215ef8c99a4da7a5bcd6c786d5"/>
+            </Metadata>
+            <Content Value="ce3dbb35-2215-442f-bb97-cb5b428a224d.mp4"/>
+        </Asset>
+        <Asset>
+            <Metadata>
+                <AMS Version_Major="1" Version_Minor="0" Verb="" Asset_Class="closed caption" Provider="bloomberg" Product="SVOD" Asset_Name="ce3dbb35-2215-442f-bb97-cb5b428a224d Movie" Description="NBA Working With Obama on Global Basketball Project, Deputy Commissioner Says" Creation_Date="2019-06-04" Provider_ID="bloomberg.com" Asset_ID="ce3dbb35-2215-442f-bb97-cb5b428a224dCAP"/>
+                <App_Data App="SVOD" Name="Type" Value="closed caption"/>
+                <App_Data App="SVOD" Name="Language" Value="en"/>
+                <App_Data App="SVOD" Name="MIME_Type" Value="text/plain"/>
+                <App_Data App="SVOD" Name="Content_CheckSum" Value="fcaf952e9790922b0961202b85ee26dd"/>
+            </Metadata>
+            <Content Value="ce3dbb35-2215-442f-bb97-cb5b428a224d.dfxp"/>
+        </Asset>
+    </Asset>
+</ADI>

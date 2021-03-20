@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ADI SYSTEM "ADI.DTD">
+<ADI>
+    <Metadata>
+
+        <AMS Asset_Class="package" Asset_ID="HDFD0000010075310401" Asset_Name="7531040_ZombieDatingShow_HDP" Creation_Date="2019-10-03" Description="ZombieDatingShow HD--package--" Product="MOD" Provider="FOODNETWORK_HD" Provider_ID="foodnetwork.com" Version_Major="2" Version_Minor="0"/>
+        <App_Data App="MOD" Name="Metadata_Spec_Version" Value="CableLabsVOD1.1"/>
+
+        <App_Data App="MOD" Name="Provider_Content_Tier" Value="SNI_C3D4_MED_HD"/>
+    </Metadata>
+    <Asset>
+
+        <Metadata>
+            <AMS Asset_Class="title" Asset_ID="HDFD0000010075310402" Asset_Name="7531040_ZombieDatingShow_HDT" Creation_Date="2019-10-03" Description="ZombieDatingShow HD--title--" Product="MOD" Provider="FOODNETWORK_HD" Provider_ID="foodnetwork.com" Version_Major="2" Version_Minor="0"/>
+            <App_Data App="MOD" Name="Title_Brief" Value="ZombieDatingShow HD"/>
+            <App_Data App="MOD" Name="Title_Brief_SD" Value="ZombieDatingShow"/>
+            <App_Data App="MOD" Name="Episode_Name" Value="Zombie Dating Show"/>
+            <App_Data App="MOD" Name="Nonlinear_ID" Value="7531040"/>
+            <App_Data App="MOD" Name="Episode_ID" Value="EP014704950054"/>
+            <App_Data App="MOD" Name="Priority" Value="rush"/>
+            <App_Data App="MOD" Name="Authenticated" Value="Y"/>
+            <App_Data App="MOD" Name="Closed_Captioning" Value="Y"/>
+            <App_Data App="MOD" Name="Title" Value="Zombie Dating Show"/>
+            <App_Data App="MOD" Name="Title_SD" Value="Zombie Dating Show"/>
+            <App_Data App="MOD" Name="Type" Value="title"/>
+            <App_Data App="MOD" Name="Summary_Short" Value="Five teams made up of an expert pumpkin carver, a cake artist and a sugar master create Halloween-themed displays depicting a zombie dating show. The special guest judge is Fear the Walking Dead's Colman Domingo."/>
+            <App_Data App="MOD" Name="Rating" Value="TV-G"/>
+            <App_Data App="MOD" Name="Run_Time" Value="01:00:04"/>
+            <App_Data App="MOD" Name="Display_Run_Time" Value="01:00"/>
+            <App_Data App="MOD" Name="Year" Value="2019"/>
+            <App_Data App="MOD" Name="Actors_Display" Value="Jonathan Bennett"/>
+            <App_Data App="MOD" Name="Studio" Value="Food Network"/>
+
+
+
+            <App_Data App="MOD" Name="Category_SD" Value="Life &amp; Home/Food Network/Halloween Wars"/>
+            <App_Data App="MOD" Name="Category_SD" Value="TV Shows/By Network/Food Network/Halloween Wars/Season 9"/>
+            <App_Data App="MOD" Name="Category_SD" Value="TV Shows/Shows G-I/Halloween Wars/Season 9"/>
+
+            <App_Data App="MOD" Name="Billing_ID" Value="00000"/>
+            <App_Data App="MOD" Name="Maximum_Viewing_Length" Value="01:00:00"/>
+            <App_Data App="MOD" Name="Premiere_Date" Value="2019-10-07"/>
+            <App_Data App="MOD" Name="Licensing_Window_Start" Value="2019-10-07T00:00:00"/>
+            <App_Data App="MOD" Name="Licensing_Window_End" Value="2019-10-14T23:59:59"/>
+            <App_Data App="MOD" Name="Provider_QA_Contact" Value="Leslie Podrasky"/>
+            <App_Data App="MOD" Name="Contract_Name" Value="Scripps Networks"/>
+            <App_Data App="MOD" Name="Suggested_Price" Value="0.00"/>
+            <App_Data App="MOD" Name="Studio_Royalty_Percent" Value="0"/>
+            <App_Data App="MOD" Name="Studio_Royalty_Minimum" Value="0"/>
+            <App_Data App="MOD" Name="Studio_Royalty_Flat_Rate" Value="0"/>
+            <App_Data App="MOD" Name="Studio_Name" Value="Food Network"/>
+            <App_Data App="MOD" Name="Preview_Period" Value="180"/>
+            <App_Data App="MOD" Name="Distributor_Name" Value="CMC"/>
+            <App_Data App="MOD" Name="Programmer_Call_Letters" Value="FOODHD"/>
+            <App_Data App="MOD" Name="Recording_Start_Primary" Value="2019-10-06T21:00:00"/>
+            <App_Data App="MOD" Name="Recording_End_Primary" Value="2019-10-06T22:00:00"/>
+            <App_Data App="MOD" Name="Recording_Start_Alternate" Value="2019-10-07T00:00:00"/>
+            <App_Data App="MOD" Name="Recording_End_Alternate" Value="2019-10-07T01:00:00"/>
+            <App_Data App="MOD" Name="Recording_Channel" Value="Food Network"/>
+            <App_Data App="MOD" Name="Title_30" Value="Zombie Dating Show"/>
+            <App_Data App="MOD" Name="Summary_80" Value="Five teams create displays depicting a zombie dating show."/>
+            <App_Data App="MOD" Name="Series_Name" Value="Halloween Wars"/>
+            <App_Data App="MOD" Name="Series_ID" Value="SH014704950000"/>
+            <App_Data App="MOD" Name="Episode_Number" Value="3"/>
+            <App_Data App="MOD" Name="Season_Number" Value="9"/>
+            <App_Data App="MOD" Name="ChapterStartTime" Value="00:09:41,00:16:13,00:24:28,00:29:01,00:37:16"/>
+
+            <App_Data App="MOD" Name="Asset_Type" Value="episode"/>
+            <App_Data App="MOD" Name="Show_Abbr" Value="HW"/>
+            <App_Data App="MOD" Name="House_ID" Value="7531040"/>
+            <App_Data App="MOD" Name="sNIGUID" Value="7be93b4c-00a9-478e-8f8e-e445a82f9cf2"/>
+            <App_Data App="MOD" Name="seriesSynopsis_full" Value="Cake decorators, sugar artists and pumpkin carving experts battle it out as they create Halloween-themed edible displays. The last team to scare off the competition will take home a $50,000 grand prize."/>
+            <App_Data App="MOD" Name="contentOwnerTitleID" Value="7531040"/>
+            <App_Data App="MOD" Name="contentOwnerAlphaID" Value="7531040"/>
+            <App_Data App="MOD" Name="clippable" Value="true"/>
+            <App_Data App="MOD" Name="castable" Value="false"/>
+            <App_Data App="MOD" Name="browser_playback" Value="false"/>
+            <App_Data App="MOD" Name="tags" Value="zombie, dating, competition, challenge, holiday, pumpkin, candy making, cake decorating, halloween, jonathan bennett, todd tucker, shinmin li, halloween wars, food network"/>
+            <App_Data App="MOD" Name="Ad_Content_ID" Value="179600.002.571"/>
+            <App_Data App="MOD" Name="Category" Value="TV Shows/Shows G-I HD/Halloween Wars/Season 9"/>
+            <App_Data App="MOD" Name="Category" Value="Life &amp; Home/Food Network/Halloween Wars HD"/>
+            <App_Data App="MOD" Name="Category" Value="TV Shows/By Network/Food Network/Halloween Wars HD/Season 9"/>
+            <App_Data App="MOD" Name="Genre" Value="Family"/>
+            <App_Data App="MOD" Name="Keywords" Value="zombie"/>
+            <App_Data App="MOD" Name="Keywords" Value="dating"/>
+            <App_Data App="MOD" Name="Keywords" Value="todd tucker"/>
+            <App_Data App="MOD" Name="Keywords" Value="shinmin li"/>
+            <App_Data App="MOD" Name="Keywords" Value="halloween wars"/>
+            <App_Data App="MOD" Name="Keywords" Value="food network"/>
+            <App_Data App="MOD" Name="Keywords" Value="competition"/>
+            <App_Data App="MOD" Name="Keywords" Value="challenge"/>
+            <App_Data App="MOD" Name="Keywords" Value="holiday"/>
+            <App_Data App="MOD" Name="Keywords" Value="pumpkin"/>
+            <App_Data App="MOD" Name="Keywords" Value="candy making"/>
+            <App_Data App="MOD" Name="Keywords" Value="cake decorating"/>
+            <App_Data App="MOD" Name="Keywords" Value="halloween"/>
+            <App_Data App="MOD" Name="Keywords" Value="jonathan bennett"/>
+            <App_Data App="MOD" Name="ContentSegment_1" Value="00:00:00:00, 00:09:49:17"/>
+            <App_Data App="MOD" Name="ContentSegment_2" Value="00:13:29:27, 00:20:01:12"/>
+            <App_Data App="MOD" Name="ContentSegment_3" Value="00:23:47:06, 00:32:02:02"/>
+            <App_Data App="MOD" Name="ContentSegment_4" Value="00:35:17:14, 00:39:50:13"/>
+            <App_Data App="MOD" Name="ContentSegment_5" Value="00:43:05:22, 00:50:50:12"/>
+            <App_Data App="MOD" Name="ContentSegment_6" Value="00:55:15:28, 01:00:03:27"/>
+            <App_Data App="MOD" Name="AdBreak_1" Value="00:09:49:19, 00:13:29:26"/>
+            <App_Data App="MOD" Name="AdBreak_2" Value="00:20:01:13, 00:23:47:05"/>
+            <App_Data App="MOD" Name="AdBreak_3" Value="00:32:02:04, 00:35:17:14"/>
+            <App_Data App="MOD" Name="AdBreak_4" Value="00:39:50:15, 00:43:05:22"/>
+            <App_Data App="MOD" Name="AdBreak_5" Value="00:50:50:12, 00:55:15:28"/>
+            <App_Data App="MOD" Name="LocalAdBreak_1" Value="00:22:47:04, 00:23:47:05"/>
+            <App_Data App="MOD" Name="LocalAdBreak_2" Value="00:54:15:27, 00:55:15:28"/>
+            <App_Data App="MOD" Name="ContentSegment_Sec_1" Value="0.0, 589.589"/>
+            <App_Data App="MOD" Name="ContentSegment_Sec_2" Value="809.909, 1201.41"/>
+            <App_Data App="MOD" Name="ContentSegment_Sec_3" Value="1427.226, 1922.087"/>
+            <App_Data App="MOD" Name="ContentSegment_Sec_4" Value="2117.482, 2390.455"/>
+            <App_Data App="MOD" Name="ContentSegment_Sec_5" Value="2585.75, 3050.414"/>
+            <App_Data App="MOD" Name="ContentSegment_Sec_6" Value="3315.946, 3603.934"/>
+            <App_Data App="MOD" Name="AdBreak_Sec_1" Value="589.622, 809.876"/>
+            <App_Data App="MOD" Name="AdBreak_Sec_2" Value="1201.443, 1427.192"/>
+            <App_Data App="MOD" Name="AdBreak_Sec_3" Value="1922.12, 2117.449"/>
+            <App_Data App="MOD" Name="AdBreak_Sec_4" Value="2390.488, 2585.717"/>
+            <App_Data App="MOD" Name="AdBreak_Sec_5" Value="3050.447, 3315.913"/>
+            <App_Data App="MOD" Name="LocalAdBreak_Sec_1" Value="1367.166, 1427.192"/>
+            <App_Data App="MOD" Name="LocalAdBreak_Sec_2" Value="3255.886, 3315.913"/>
+        </Metadata>
+        <Asset>
+
+            <Metadata>
+                <AMS Asset_Class="movie" Asset_ID="HDFD0000010075310403" Asset_Name="7531040_ZombieDatingShow_HDM" Creation_Date="2019-10-03" Description="ZombieDatingShow HD--movie--" Product="MOD" Provider="FOODNETWORK_HD" Provider_ID="foodnetwork.com" Version_Major="2" Version_Minor="0"/>
+                <App_Data App="MOD" Name="Type" Value="movie"/>
+                <App_Data App="MOD" Name="Languages" Value="en"/>
+                <App_Data App="MOD" Name="Audio_Type" Value="Stereo"/>
+                <App_Data App="MOD" Name="Content_FileSize" Value="12166566640"/>
+                <App_Data App="MOD" Name="Content_CheckSum" Value="193827480597c55a66472c3bc5d63887"/>
+                <App_Data App="MOD" Name="HDContent" Value="N"/>
+                <App_Data App="MOD" Name="Bit_Rate" Value="15000"/>
+            </Metadata>
+            <Content Value="HDFD0000010075310403-24028826.mpg"/>
+        </Asset>
+
+
+
+
+
+        <Asset>
+            <Metadata>
+                <AMS Asset_Class="poster" Asset_ID="HDFD0000010075310405" Asset_Name="HDFD0000010075310405-poster" Creation_Date="2019-10-03" Description="Five teams made up of an expert pumpkin carver, a cake artist and a sugar master create Halloween-themed displays depicting a zombie dating show. The special guest judge is Fear the Walking Dead's Colman Domingo." Product="MOD" Provider="FOODNETWORK_HD" Provider_ID="foodnetwork.com" Version_Major="2" Version_Minor="0"/>
+                <App_Data App="MOD" Name="Type" Value="poster"/>
+                <App_Data App="MOD" Name="Image_Aspect_Ratio" Value="320x240"/>
+                <App_Data App="MOD" Name="Content_FileSize" Value="230538"/>
+                <App_Data App="MOD" Name="Content_CheckSum" Value="b343d6ff2ca93101478b75e977dfada2"/>
+                <App_Data App="MOD" Name="HDContent" Value="N"/>
+            </Metadata>
+            <Content Value="HDFD0000010075310403-24028823.bmp"/>
+        </Asset>
+    </Asset>
+</ADI>

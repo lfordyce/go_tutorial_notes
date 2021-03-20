@@ -2,11 +2,14 @@ package handler
 
 import (
 	"fmt"
+	"io"
 	"testing"
 )
 
 func TestExampleHandlerFunc_RunExample(t *testing.T) {
-	end := ExampleHandlerFunc(func(*ExampleWriter, *ExampleInput) {})
+	end := ExampleHandlerFunc(func(io.Writer, *ExampleInput) {
+		fmt.Println("this is the end...")
+	})
 	he := strExample("Starting...", "End!",
 		historyIDExample(1,
 			historyIDExample(2,

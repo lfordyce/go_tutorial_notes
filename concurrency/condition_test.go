@@ -38,7 +38,7 @@ func TestPrintCondition(t *testing.T) {
 			// Changes must be made when
 			// cond.L is locked.
 			cond.L.Lock()
-			values[i] = string('a' + i)
+			values[i] = string(rune('a' + i))
 
 			// Notify when cond.L lock is acquired.
 			cond.Broadcast()

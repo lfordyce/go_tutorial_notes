@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ADI>
+    <Metadata>
+        <AMS Provider="InDemand" Product="First-Run" Asset_Name="The_Titanic" Version_Major="1" Version_Minor="0" Description="The Titanic asset package" Creation_Date="2002-01-11" Provider_ID="indemand.com" Asset_ID="UNVA2001081701004000" Asset_Class="package"/>
+        <App_Data App="MOD" Name="Metadata_Spec_Version" Value="CableLabsVOD1.1"/>
+    </Metadata>
+    <Asset>
+        <Metadata>
+            <AMS Provider="InDemand" Product="First-Run" Asset_Name="The_Titanic_Title" Version_Major="1" Version_Minor="0" Description="The Titanic title metadata" Creation_Date="2002-01-11" Provider_ID="indemand.com" Asset_ID="UNVA2001081701004001" Asset_Class="title"/>
+            <App_Data App="MOD" Name="Title_Brief" Value="The Titanic"/>
+            <App_Data App="MOD" Name="Title" Value="The Titanic"/>
+            <App_Data App="MOD" Name="Type" Value="title"/>
+            <App_Data App="MOD" Name="Summary_Short" Value="Fictional romantic tale of a rich girl and poor boy who meet on the ill-fated voyage of the 'unsinkable' ship"/>
+            <App_Data App="MOD" Name="Rating" Value="R"/>
+            <App_Data App="MOD" Name="Run_Time" Value="03:14:00"/>
+            <App_Data App="MOD" Name="Display_Run_Time" Value="03:14"/>
+            <App_Data App="MOD" Name="Billing_ID" Value="56789"/>
+            <App_Data App="MOD" Name="Licensing_Window_Start" Value="2002-02-01T00:00:00"/>
+            <App_Data App="MOD" Name="Licensing_Window_End" Value="2002-03-31T11:59:59"/>
+            <App_Data App="MOD" Name="Provider_QA_Contact" Value="John Doe, JDoe@InDemand.com"/>
+            <App_Data App="MOD" Name="Contract_Name" Value="InDemand"/>
+        </Metadata>
+        <Asset>
+            <Metadata>
+                <AMS Provider="InDemand" Product="First-Run" Asset_Name="The_Titanic.mpg" Version_Major="1" Version_Minor="0" Description="The Titanic Movie" Creation_Date="2002-01-11" Provider_ID="indemand.com" Asset_ID="UNVA2001081701004002" Asset_Class="movie"/>
+                <App_Data App="MOD" Name="Type" Value="movie"/>
+                <App_Data App="MOD" Name="Audio_Type" Value="Dolby Digital"/>
+                <App_Data App="MOD" Name="Content_FileSize" Value="3907840625"/>
+                <App_Data App="MOD" Name="Content_CheckSum" Value="12558D3269D25852BD26548DC2654CA"/>
+            </Metadata>
+        </Asset>
+        <Asset>
+            <Metadata>
+                <AMS Provider="InDemand" Product="First-Run" Asset_Name="The_Titanic_Preview.mpg" Version_Major="1" Version_Minor="0" Description="The Titanic Preview" Creation_Date="2002-01-11" Provider_ID="indemand.com" Asset_ID="UNVA2001081701004003" Asset_Class="preview"/>
+                <App_Data App="MOD" Name="Rating" Value="G"/>
+                <App_Data App="MOD" Name="Run_Time" Value="00:00:45"/>
+                <App_Data App="MOD" Name="Type" Value="preview"/>
+                <App_Data App="MOD" Name="Audio_Type" Value="Dolby Digital"/>
+                <App_Data App="MOD" Name="Content_FileSize" Value="25284375"/>
+                <App_Data App="MOD" Name="Content_CheckSum" Value="A1258D3269D25852BD26548DC2654C1"/>
+            </Metadata>
+            <Content Value="The_Titanic_Preview.mpg"/>
+        </Asset>
+        <Asset>
+            <Metadata>
+                <AMS Provider="InDemand" Product="First-Run" Asset_Name="The_Titanic_Box_Cover.bmp" Version_Major="1" Version_Minor="0" Description="The Titanic Box Cover" Creation_Date="2002-01-11" Provider_ID="indemand.com" Asset_ID="UNVA2001081701004004" Asset_Class="box cover"/>
+                <App_Data App="MOD" Name="Type" Value="box cover"/>
+                <App_Data App="MOD" Name="Content_FileSize" Value="15235"/>
+                <App_Data App="MOD" Name="Content_CheckSum" Value="B3258D3269D25852BD26548DC2654CD"/>
+            </Metadata>
+            <Content Value="The_Titanic_Box_Cover.bmp"/>
+        </Asset>
+        <Asset>
+            <Metadata>
+                <AMS Provider="InDemand" Product="First-Run" Asset_Name="The_Titanic_Encrypted.mpg" Version_Major="1" Version_Minor="0" Description="The Titanic Movie Encrypted" Creation_Date="2002-01-11" Provider_ID="indemand.com" Asset_ID="UNVA2001081701004005" Asset_Class="encrypted"/>
+                <App_Data App="MOD" Name="Asset_Encrypted" Value="UNVA2001081701004002"/>
+                <App_Data App="MOD" Name="Receiver_Type" Value="SomeReceiverType"/>
+                <App_Data App="MOD" Name="Content_FileSize" Value="3907840625"/>
+                <App_Data App="MOD" Name="Content_CheckSum" Value="DC2654CA12558D3269D25852BD26548"/>
+            </Metadata>
+            <Content Value="The_Titanic_Encrypted.mpg"/>
+        </Asset>
+    </Asset>
+</ADI>

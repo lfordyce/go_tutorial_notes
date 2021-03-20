@@ -11,9 +11,10 @@ func TestObserver_Observe(t *testing.T) {
 	o.mu = &sync.Mutex{}
 
 	obs := []Observer{
-		{"Eggs", make(chan int, 2)},
+		{"Eggs", make(chan int, 3)},
 		{"Bacon", make(chan int, 2)},
 	}
+
 	wg = &sync.WaitGroup{}
 	wg.Add(len(obs))
 	for _, v := range obs {
@@ -24,6 +25,7 @@ func TestObserver_Observe(t *testing.T) {
 	go func() {
 		<-time.After(1 * time.Second)
 		o.Notify(3)
+		o.Notify(4)
 	}()
 
 	go func() {

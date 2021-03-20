@@ -21,11 +21,6 @@ func TestStrategy(t *testing.T) {
 	}
 }
 
-var (
-	Adder = Strategy(adder)
-	Multy = Strategy(multiy)
-)
-
 func TestSecretStrategyResult(t *testing.T) {
 	strategic := New(4, 5)
 
@@ -40,10 +35,10 @@ func TestSecretStrategyResult(t *testing.T) {
 	//	return a + b
 	//}
 
-	strategic.SetStrategy(Multy)
+	strategic.SetStrategy(multiy)
 	result := strategic.Result()
 
-	strategic.SetStrategy(Adder)
+	strategic.SetStrategy(adder)
 	i := strategic.Result()
 
 	fmt.Println(i)

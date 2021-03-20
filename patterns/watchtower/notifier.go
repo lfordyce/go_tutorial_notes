@@ -44,7 +44,6 @@ func (wt *WatchTower) Notify(e Event) {
 		if key == nil {
 			return false
 		}
-
 		key.(Observer).OnNotify(e)
 		return true
 	})
