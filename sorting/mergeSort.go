@@ -13,7 +13,7 @@ func DeepCopy(vals []int) []int {
 	return tmp
 }
 
-// Generates a slice of size, size filled with random numbers
+// GenerateSlice Generates a slice of size, size filled with random numbers
 func GenerateSlice(size int) []int {
 
 	slice := make([]int, size, size)
@@ -50,7 +50,7 @@ func MergeSort(slice []int) []int {
 	return Merge(MergeSort(low), MergeSort(high))
 }
 
-// Merges left and right slice into newly created slice
+// Merge Merges left and right slice into newly created slice
 func Merge(left, right []int) []int {
 
 	size, i, j := len(left)+len(right), 0, 0
