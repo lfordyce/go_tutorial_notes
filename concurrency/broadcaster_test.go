@@ -30,7 +30,7 @@ func TestBroadCaster(t *testing.T) {
 
 }
 
-func broadcaster(bcast *threadSafeSlice, ch chan interface{}) {
+func broadcaster(bcast *threadSafeSlice, ch <-chan interface{}) {
 	for {
 		msg := <-ch
 		bcast.Iter(func(w *bworker) {
@@ -39,7 +39,7 @@ func broadcaster(bcast *threadSafeSlice, ch chan interface{}) {
 	}
 }
 
-func generator(ch chan interface{}, quit chan bool) {
+func generator(ch chan<- interface{}, quit chan bool) {
 
 	for i := 0; i < 100; i++ {
 		ch <- i
