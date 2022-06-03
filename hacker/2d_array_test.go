@@ -26,6 +26,9 @@ func Test2DArray(t *testing.T) {
 
 	result := testRunner(hourglassSum, t)
 	t.Log(result)
+	if result != 19 {
+		t.Errorf("Expected %d, Actual %d", 19, result)
+	}
 }
 
 func testRunner(fn func([][]int32) int32, t *testing.T) int32 {
