@@ -26,12 +26,12 @@ func TestRangeBehavior(t *testing.T) {
 type Attribute struct {
 	Key, Val string
 }
-type Node struct {
+type Nodee struct {
 	Attr []Attribute
 }
 
 func TestSliceModificationIteration(t *testing.T) {
-	n := Node{[]Attribute{
+	n := Nodee{[]Attribute{
 		{"foo", ""},
 		{"href", ""},
 		{"bar", ""},

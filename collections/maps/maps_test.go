@@ -35,6 +35,8 @@ func TestSortMap(t *testing.T) {
 	}
 	//sort.Sort(sort.Reverse(sort.IntSlice(a)))
 	//sort.Sort(sort.Reverse(sort.IntSlice(a)))
+	//sort.Sort(sort.Slice)
+
 	sort.Sort(sort.IntSlice(a))
 	for _, k := range a {
 		for _, s := range n[k] {
