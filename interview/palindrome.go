@@ -71,7 +71,7 @@ func gameOfThrones(s string) string {
 	flag := 0
 
 	for _, value := range countMap {
-		if value % 2 != 0 {
+		if value%2 != 0 {
 			flag++
 			if flag > 1 {
 				return "NO"
@@ -88,4 +88,8 @@ func euclideanAlgorithm(a, b int32) int32 {
 	}
 	remainder := a % b
 	return euclideanAlgorithm(b, remainder)
+}
+
+func longestPalindrome(s string) string {
+	return ""
 }

@@ -1,5 +1,7 @@
 package interview
 
+import "math"
+
 /**
 minimumTotal: Given a triangle array, return the minimum path sum from top to bottom.
 
@@ -26,7 +28,12 @@ so deciding which part of the cache to discard can be a hard job.
 the min pathsums for these nodes are the values of the nodes themselves.
 From there, the min pathsum at the ith node on the kth row would be the
 lesser of the pathsums of its two children plus the value of itself, i.e.:
+
+
+The optimal solution to this problem is to push directly from the lower layer to the upper layer without auxiliary space.
+The common solution is to use a two-dimensional array
 */
+
 func minimumTotal(triangle [][]int) int {
 	if triangle == nil {
 		return 0
@@ -37,6 +44,38 @@ func minimumTotal(triangle [][]int) int {
 		}
 	}
 	return triangle[0][0]
+}
+
+// space complexity O(n)
+func minimumTotoal1(triangle [][]int) int {
+	if len(triangle) == 0 {
+		return 0
+	}
+	dp, minNum := make([]int, len(triangle[len(triangle)-1])), math.MaxInt64
+	for index := 0; index < len(triangle[0]); index++ {
+		dp[index] = triangle[0][index]
+	}
+
+	for i := 1; i < len(triangle); i++ {
+		for j := len(triangle[0]) - 1; j >= 0; j-- {
+			if j == 0 {
+				// far left
+				dp[j] += triangle[i][0]
+			} else if j == len(triangle[i])-1 {
+				// rightmost
+				dp[j] += dp[j-1] + triangle[i][j]
+			} else {
+				// middle
+				dp[j] = min(dp[j-1]+triangle[i][j], dp[j]+triangle[i][j])
+			}
+		}
+	}
+	for i := 0; i < len(dp); i++ {
+		if dp[i] < minNum {
+			minNum = dp[i]
+		}
+	}
+	return minNum
 }
 
 func min(a int, b int) int {
