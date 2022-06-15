@@ -53,3 +53,46 @@ func findMinHeightTrees(n int, edges [][]int) []int {
 	}
 	return res
 }
+
+func findMinHeightTreesAlt(n int, edges [][]int) []int {
+	if len(edges) == 0 {
+		return []int{0}
+	}
+	degrees := make([]int, n)
+	adjList := make([][]int, n)
+	leafs := make([]int, 0, n)
+	// create adjacent list
+	for _, edge := range edges {
+		adjList[edge[0]] = append(adjList[edge[0]], edge[1])
+		adjList[edge[1]] = append(adjList[edge[1]], edge[0])
+		// update how many edges each node has
+		degrees[edge[1]]++
+		degrees[edge[0]]++
+	}
+	for i := 0; i < n; i++ {
+		// adding all the leaf nodes
+		if degrees[i] == 1 {
+			leafs = append(leafs, i)
+		}
+	}
+	for n > 2 {
+		newLeafs := make([]int, 0, len(leafs))
+		for _, leaf := range leafs {
+			n--
+			for _, neighbor := range adjList[leaf] {
+				// decrease degree of neighbour nodes and push leaf nodes into queue
+				degrees[neighbor]--
+				// if in-degree becomes 1, add it to the queue
+				if degrees[neighbor] == 1 {
+					newLeafs = append(newLeafs, neighbor)
+				}
+			}
+		}
+		leafs = newLeafs
+	}
+	res := make([]int, 0, len(leafs))
+	for _, v := range leafs {
+		res = append(res, v)
+	}
+	return res
+}

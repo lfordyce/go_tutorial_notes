@@ -16,7 +16,7 @@ func TestMinHeightTrees(t *testing.T) {
 
 	for _, tst := range cases {
 		t.Run(tst.desc, func(t *testing.T) {
-			if actual := findMinHeightTrees(tst.n, tst.edges); !IntArrayEqual(actual, tst.exp) {
+			if actual := findMinHeightTreesAlt(tst.n, tst.edges); !IntArrayEqual(actual, tst.exp) {
 				t.Errorf("expected %v != actual %v", tst.exp, actual)
 			}
 		})
