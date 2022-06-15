@@ -1,5 +1,14 @@
 package interview
 
+/**
+If the number of nodes is V, and the number of edges is E.
+The space complexity is O(V+2E), for storing the whole tree.
+
+The time complexity is O(E),
+because we gradually remove all the neighboring information.
+As some friends pointing out, for a tree, if V=n, then E=n-1.
+Thus both time complexity and space complexity become O(n).
+*/
 func findMinHeightTrees(n int, edges [][]int) []int {
 	if len(edges) == 0 {
 		return []int{0}
