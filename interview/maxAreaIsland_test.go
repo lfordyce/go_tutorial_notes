@@ -25,7 +25,7 @@ func TestMaxAreaIsland(t *testing.T) {
 
 	for _, tst := range cases {
 		t.Run(tst.desc, func(t *testing.T) {
-			if actual := maxAreaOfIsland(tst.input); tst.exp != actual {
+			if actual := maxAreaOfIslandAlt(tst.input); tst.exp != actual {
 				t.Errorf("expected (%d) != actual (%d)", tst.exp, actual)
 			}
 		})
