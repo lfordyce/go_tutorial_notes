@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"github.com/lfordyce/generalNotes/collections/trie"
 	"github.com/lfordyce/generalNotes/concurrency"
 	"github.com/lfordyce/generalNotes/interview"
 	"github.com/lfordyce/generalNotes/sorting"
@@ -70,4 +71,50 @@ func main() {
 	concurrency.Init()
 	concurrency.HandleAsyncCalls()
 
+	m := trie.NewTreeMap()
+
+	cases := []struct {
+		key   string
+		value interface{}
+	}{
+		{"fish", 0},
+		{"cat", 1},
+		{"dog", 2},
+		{"cats", 3},
+		{"caterpillar", 4},
+		{"cattle", 5},
+		{"apple", 6},
+		{"battle", 7},
+		{"statistics", 8},
+	}
+
+	for _, c := range cases {
+		m.Insert(c.key, c.value)
+	}
+
+	for _, c := range cases {
+		if !m.Exists(c.key) {
+			err := fmt.Errorf("map does not contain word: (%v)\n", c.key)
+			fmt.Println(err.Error())
+		}
+	}
+
+	for _, prefix := range []string{
+		"app",
+		"cat",
+		"bat",
+		"stat",
+	} {
+		if !m.Prefix(prefix) {
+			err := fmt.Errorf("map does not contain prefix of: (%v)\n", prefix)
+			fmt.Println(err.Error())
+		}
+	}
+
+	for _, c := range cases {
+		if val := m.Get(c.key); val != c.value {
+			err := fmt.Errorf("expected key (%s) to have value (%v), got (%v)\n", c.key, c.value, val)
+			fmt.Println(err.Error())
+		}
+	}
 }
