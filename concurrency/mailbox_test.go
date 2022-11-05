@@ -33,13 +33,14 @@ func TestMailbox_ReceiveNext(t *testing.T) {
 	}
 
 	addr.Send("Test message 1")
-	time.Sleep(5 * time.Second)
+	time.Sleep(2 * time.Second)
 	<-received
-	//addr.Send("Test message 2")
-	//time.Sleep(5 * time.Second)
-	//<-received
-	//addr.Send("Test message 3")
-	//<-received
+	addr.Send("Test message 2")
+	time.Sleep(2 * time.Second)
+	<-received
+	addr.Send("Test message 3")
+	time.Sleep(2 * time.Second)
+	<-received
 
 	mbox.Terminate()
 	wg.Wait()
