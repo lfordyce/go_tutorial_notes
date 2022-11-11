@@ -1,5 +1,6 @@
 package interview
 
+// time complexity for search is O (log n)
 func binarySearch(a []int, target int) (result int, searchCount int) {
 	mid := len(a) / 2
 	switch {
