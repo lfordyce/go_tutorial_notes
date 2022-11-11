@@ -22,7 +22,6 @@ func staircase(n int) {
 		buffer.WriteString("#")
 		fmt.Println(buffer.String())
 	}
-
 }
 
 type T struct {

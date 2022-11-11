@@ -1,6 +1,6 @@
 module github.com/lfordyce/generalNotes
 
-go 1.12
+go 1.19
 
 require (
 	aqwari.net/xml v0.0.0-20210313060243-5a14a28bdce5
