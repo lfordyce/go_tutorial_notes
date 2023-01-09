@@ -56,7 +56,7 @@ func RotLeft(a []int32, d int32) []int32 {
 
 	for i := 0; i < length; i++ {
 		index := int32(i)
-		rotation := (index + d ) % int32(length)
+		rotation := (index + d) % int32(length)
 		tmp[i] = a[rotation]
 	}
 	return tmp
@@ -67,14 +67,14 @@ func MinimumBribes(q []int32) {
 
 	bribes := 0
 
-	for i := len(q) -1; i >= 0; i-- {
+	for i := len(q) - 1; i >= 0; i-- {
 		item := int(q[i])
-		if item - (i+1) > 2 {
+		if item-(i+1) > 2 {
 			fmt.Println("Too chaotic")
 			return
 		}
 
-		for j:= int(math.Max(0, float64(item - 2))); j < i; j++ {
+		for j := int(math.Max(0, float64(item-2))); j < i; j++ {
 			if q[j] > q[i] {
 				bribes++
 			}
@@ -86,11 +86,11 @@ func MinimumBribes(q []int32) {
 func MinimumSwaps(arr []int32) int32 {
 
 	swaps := 0
-	for i := 0; i < len(arr); i ++ {
+	for i := 0; i < len(arr); i++ {
 
-		if i + 1 != int(arr[i]) {
+		if i+1 != int(arr[i]) {
 			t := i
-			for int(arr[t]) != i + 1 {
+			for int(arr[t]) != i+1 {
 				t++
 			}
 			temp := arr[t]
