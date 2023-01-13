@@ -264,9 +264,77 @@ func TestSteward(t *testing.T) {
 		//fmt.Println("main: halting steward and ward.")
 		close(done)
 	})
-	for range doWorkWithSteward(done, 4*time.Second) {
+	for tk := range doWorkWithSteward(done, 4*time.Second) {
+		t.Logf("Hearbeat? %v\n", tk)
 	}
 	t.Log("DONE")
 	//fmt.Println("done")
+}
 
+func TestBridgeChannel(t *testing.T) {
+	orDone := func(done <-chan struct{}, c <-chan int) <-chan int {
+		valStream := make(chan int)
+		go func() {
+			defer close(valStream)
+			for {
+				select {
+				case <-done:
+					return
+				case v, ok := <-c:
+					if !ok {
+						return
+					}
+					select {
+					case valStream <- v:
+					case <-done:
+					}
+				}
+			}
+		}()
+		return valStream
+	}
+
+	bridge := func(done <-chan struct{}, chanStream <-chan <-chan int) <-chan int {
+		valStream := make(chan int)
+		go func() {
+			defer close(valStream)
+			for {
+				var stream <-chan int
+				select {
+				case maybeStream, ok := <-chanStream:
+					if !ok {
+						return
+					}
+					stream = maybeStream
+				case <-done:
+					return
+				}
+				for val := range orDone(done, stream) {
+					select {
+					case valStream <- val:
+					case <-done:
+					}
+				}
+			}
+		}()
+		return valStream
+	}
+
+	genVals := func() <-chan <-chan int {
+		chanStream := make(chan (<-chan int))
+		go func() {
+			defer close(chanStream)
+			for i := 0; i < 10; i++ {
+				stream := make(chan int, 1)
+				stream <- i
+				close(stream)
+				chanStream <- stream
+			}
+		}()
+		return chanStream
+	}
+
+	for v := range bridge(nil, genVals()) {
+		fmt.Printf("%v ", v)
+	}
 }
