@@ -14,7 +14,13 @@ func TestConcurrent(t *testing.T) {
 	go data.Run()
 	time.Sleep(time.Second)
 	secret := data.Get()
-	fmt.Println(secret)
+	fmt.Printf("Fisrt Secret : %d\n", secret)
+	time.Sleep(time.Second)
+	second := data.Get()
+	fmt.Printf("Second Secret : %d\n", second)
+	time.Sleep(time.Second)
+	third := data.Get()
+	fmt.Printf("Third Secret : %d\n", third)
 }
 
 // You can send a channel over a channel to protect the single access of a selected value.
