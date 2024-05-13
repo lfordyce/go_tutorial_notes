@@ -25,9 +25,8 @@ func HandleAsyncCalls() {
 	}
 }
 
-func asyncHTTPGets(urls []string) []*HttpResponse {
+func asyncHTTPGets(urls []string) (responses []*HttpResponse) {
 	ch := make(chan *HttpResponse, len(urls)) // buffered channel
-	var responses []*HttpResponse
 	for _, url := range urls {
 		go func(url string) {
 			fmt.Printf("Fetching %s \n", url)
