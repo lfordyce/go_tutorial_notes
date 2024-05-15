@@ -3,10 +3,7 @@ package main
 import (
 	"fmt"
 	"net"
-	"os"
-	"os/signal"
 	"sync"
-	"syscall"
 	"time"
 )
 
@@ -108,22 +105,25 @@ func (s *server) Stop() {
 }
 
 func main() {
-	s, err := newServer(":8081")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+	shortServer()
 
-	s.Start()
+	//s, err := newServer(":8081")
+	//if err != nil {
+	//	fmt.Println(err)
+	//	os.Exit(1)
+	//}
+	//
+	//s.Start()
+	//
+	//// Wait for a SIGINT or SIGTERM signal to gracefully shut down the server
+	//sigChan := make(chan os.Signal, 1)
+	//signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+	//<-sigChan
+	//
+	//fmt.Println("Shutting down server...")
+	//s.Stop()
+	//fmt.Println("Server stopped.")
 
-	// Wait for a SIGINT or SIGTERM signal to gracefully shut down the server
-	sigChan := make(chan os.Signal, 1)
-	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
-	<-sigChan
-
-	fmt.Println("Shutting down server...")
-	s.Stop()
-	fmt.Println("Server stopped.")
 	//listen, err := net.Listen("tcp", "localhost:8081")
 	//if err != nil {
 	//	fmt.Println("Error: ", err.Error())
@@ -160,4 +160,62 @@ func handleRequest(conn net.Conn) {
 
 	// Close the connection when you're done with it.
 	conn.Close()
+}
+
+func shortServer() {
+	newConns := make(chan net.Conn, 128)
+	deadConns := make(chan net.Conn, 128)
+	publishes := make(chan []byte, 128)
+	conns := make(map[net.Conn]bool)
+	listener, err := net.Listen("tcp", ":8080")
+	if err != nil {
+		panic(err)
+	}
+	go func() {
+		for {
+			conn, err := listener.Accept()
+			if err != nil {
+				panic(err)
+			}
+			newConns <- conn
+		}
+	}()
+	for {
+		select {
+		case conn := <-newConns:
+			conns[conn] = true
+			go func() {
+				buf := make([]byte, 1024)
+				for {
+					nbyte, err := conn.Read(buf)
+					if err != nil {
+						deadConns <- conn
+						break
+					} else {
+						fragment := make([]byte, nbyte)
+						copy(fragment, buf[:nbyte])
+						publishes <- fragment
+					}
+				}
+			}()
+		case deadConn := <-deadConns:
+			_ = deadConn.Close()
+			delete(conns, deadConn)
+		case publish := <-publishes:
+			for conn, _ := range conns {
+				go func(conn net.Conn) {
+					totalWritten := 0
+					for totalWritten < len(publish) {
+						writtenThisCall, err := conn.Write(publish[totalWritten:])
+						if err != nil {
+							deadConns <- conn
+							break
+						}
+						totalWritten += writtenThisCall
+					}
+				}(conn)
+			}
+		}
+	}
+	listener.Close()
 }
