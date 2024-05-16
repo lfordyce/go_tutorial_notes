@@ -187,6 +187,7 @@ func shortServer() {
 			go func() {
 				buf := make([]byte, 1024)
 				for {
+					//conn.SetReadDeadline(time.Now().Add(5 *time.Second))
 					nbyte, err := conn.Read(buf)
 					if err != nil {
 						deadConns <- conn

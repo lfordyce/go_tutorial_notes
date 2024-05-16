@@ -5,9 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"net"
-	"strconv"
-	"strings"
-	"time"
+	"os"
 )
 
 var (
@@ -15,9 +13,9 @@ var (
 )
 
 type Server struct {
-	conn     *net.UDPConn
-	messages chan string
-	clients  map[int64]Client
+	conn      *net.UDPConn
+	messages  chan string
+	clientSet map[*net.UDPAddr]bool
 }
 
 type Client struct {
@@ -28,6 +26,40 @@ type Client struct {
 
 func random(min, max int) int {
 	return rand.Intn(max-min) + min
+}
+
+func (s *Server) handleMessage() {
+	var buf [1024]byte
+
+	n, addr, err := s.conn.ReadFromUDP(buf[:])
+	if err != nil {
+		return
+	}
+	msg := string(buf[0:n])
+	s.clientSet[addr] = true
+	s.messages <- msg
+}
+
+func (s *Server) sendMessage() {
+	for {
+		msg := <-s.messages
+		//p(00, sendstr)
+		for c, _ := range s.clientSet {
+			n, err := s.conn.WriteToUDP([]byte(msg), c)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Fatal error:%s", err.Error())
+				os.Exit(1)
+			}
+			fmt.Printf("Bytes read %d, error: %v\n", n, err)
+		}
+	}
+}
+
+func checkError(err error) {
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Fatal error:%s", err.Error())
+		os.Exit(1)
+	}
 }
 
 func main() {
@@ -56,35 +88,46 @@ func main() {
 	//	go serve(pc, addr, buf[:n])
 	//}
 
-	s, err := net.ResolveUDPAddr("udp4", fmt.Sprintf(":%d", *port))
+	s, err := net.ResolveUDPAddr("udp", fmt.Sprintf(":%d", *port))
 	if err != nil {
-		panic(err)
+		fmt.Fprintf(os.Stderr, "Fatal error:%s", err.Error())
+		os.Exit(1)
 	}
-	conn, err := net.ListenUDP("udp4", s)
+	svc := &Server{
+		messages:  make(chan string, 10),
+		clientSet: make(map[*net.UDPAddr]bool),
+	}
+	svc.conn, err = net.ListenUDP("udp", s)
 	if err != nil {
-		panic(err)
+		fmt.Fprintf(os.Stderr, "Fatal error:%s", err.Error())
+		os.Exit(1)
 	}
-	defer conn.Close()
-	buffer := make([]byte, 1024)
-	rand.Seed(time.Now().Unix())
+	defer svc.conn.Close()
+	go svc.sendMessage()
 
 	for {
-		n, addr, err := conn.ReadFromUDP(buffer)
-		fmt.Print("-> ", string(buffer[0:n-1]))
-
-		if strings.TrimSpace(string(buffer[0:n])) == "STOP" {
-			fmt.Println("Exiting UDP server!")
-			return
-		}
-
-		data := []byte(strconv.Itoa(random(1, 1001)))
-		fmt.Printf("data: %s\n", string(data))
-		_, err = conn.WriteToUDP(data, addr)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
+		svc.handleMessage()
 	}
+
+	//buffer := make([]byte, 1024)
+	//rand.Seed(time.Now().Unix())
+	//for {
+	//	n, addr, err := conn.ReadFromUDP(buffer)
+	//	fmt.Print("-> ", string(buffer[0:n-1]))
+	//
+	//	if strings.TrimSpace(string(buffer[0:n])) == "STOP" {
+	//		fmt.Println("Exiting UDP server!")
+	//		return
+	//	}
+	//
+	//	data := []byte(strconv.Itoa(random(1, 1001)))
+	//	fmt.Printf("data: %s\n", string(data))
+	//	_, err = conn.WriteToUDP(data, addr)
+	//	if err != nil {
+	//		fmt.Println(err)
+	//		return
+	//	}
+	//}
 }
 
 func serve(pc net.PacketConn, addr net.Addr, buf []byte) {
