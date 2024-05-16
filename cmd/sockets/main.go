@@ -3,9 +3,15 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/lfordyce/generalNotes/cmd"
+	"log"
 	"math/rand"
 	"net"
 	"os"
+	"strconv"
+	"strings"
+
+	"github.com/google/uuid"
 )
 
 var (
@@ -13,15 +19,24 @@ var (
 )
 
 type Server struct {
-	conn      *net.UDPConn
-	messages  chan string
-	clientSet map[*net.UDPAddr]bool
+	conn     *net.UDPConn
+	messages chan string
+	clients  map[*uuid.UUID]Client
 }
 
 type Client struct {
-	userID   int64
+	userID   uuid.UUID
 	userName string
 	userAddr *net.UDPAddr
+}
+
+type Message struct {
+	messageType      cmd.MessageType
+	userID           *uuid.UUID
+	userName         string
+	content          string
+	connectionStatus cmd.ConnectionStatus
+	time             string
 }
 
 func random(min, max int) int {
@@ -29,23 +44,65 @@ func random(min, max int) int {
 }
 
 func (s *Server) handleMessage() {
-	var buf [1024]byte
+	var buf [512]byte
 
-	n, addr, err := s.conn.ReadFromUDP(buf[:])
+	n, addr, err := s.conn.ReadFromUDP(buf[0:])
 	if err != nil {
 		return
 	}
+
 	msg := string(buf[0:n])
-	s.clientSet[addr] = true
-	s.messages <- msg
+	m := s.parseMessage(msg)
+
+	if m.connectionStatus == cmd.LEAVING {
+		delete(s.clients, m.userID)
+		s.messages <- msg
+		log.Printf("%s left", m.userName)
+	} else {
+		switch m.messageType {
+		case cmd.FUNC:
+			c := Client{
+				userID:   *m.userID,
+				userName: m.userName,
+				userAddr: addr,
+			}
+			s.clients[m.userID] = c
+			s.messages <- msg
+			log.Printf("%s joining", m.userName)
+		case cmd.CLASSIQUE:
+
+			log.Printf("%s %s: %s", m.time, m.userName, m.content)
+			s.messages <- msg
+		}
+	}
+}
+
+func (s *Server) parseMessage(msg string) (m Message) {
+	stringArray := strings.Split(msg, "\x01")
+
+	parsedUUID, _ := uuid.Parse(stringArray[0])
+	m.userID = &parsedUUID
+	messageTypeStr, _ := strconv.Atoi(stringArray[1])
+	m.messageType = cmd.MessageType(messageTypeStr)
+	m.userName = stringArray[2]
+	m.content = stringArray[3]
+	m.time = stringArray[4]
+	// pf("MESSAGE RECEIVED: %s \n", msg)
+	// pf("USER NAME: %s \n", stringArray [2])
+	// pf("CONTENT: %s \n", stringArray [3])
+	if strings.HasPrefix(msg, ":q") || strings.HasPrefix(msg, ":quit") {
+		log.Printf("%s is leaving\n", m.userName)
+		m.connectionStatus = cmd.LEAVING
+	}
+	return
 }
 
 func (s *Server) sendMessage() {
 	for {
 		msg := <-s.messages
 		//p(00, sendstr)
-		for c, _ := range s.clientSet {
-			n, err := s.conn.WriteToUDP([]byte(msg), c)
+		for _, c := range s.clients {
+			n, err := s.conn.WriteToUDP([]byte(msg), c.userAddr)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Fatal error:%s", err.Error())
 				os.Exit(1)
@@ -94,8 +151,8 @@ func main() {
 		os.Exit(1)
 	}
 	svc := &Server{
-		messages:  make(chan string, 10),
-		clientSet: make(map[*net.UDPAddr]bool),
+		messages: make(chan string, 10),
+		clients:  make(map[*uuid.UUID]Client),
 	}
 	svc.conn, err = net.ListenUDP("udp", s)
 	if err != nil {

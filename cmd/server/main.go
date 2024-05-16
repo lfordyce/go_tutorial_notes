@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net"
 	"sync"
 	"time"
@@ -167,10 +168,18 @@ func shortServer() {
 	deadConns := make(chan net.Conn, 128)
 	publishes := make(chan []byte, 128)
 	conns := make(map[net.Conn]bool)
+
+	// a port number will be automatically chosen if add is something like:
+	// addr := "127.0.0.1:"
 	listener, err := net.Listen("tcp", ":8080")
 	if err != nil {
 		panic(err)
 	}
+	host, port, err := net.SplitHostPort(listener.Addr().String())
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("Listening on host: %s, port: %s\n", host, port)
 	go func() {
 		for {
 			conn, err := listener.Accept()
@@ -196,11 +205,13 @@ func shortServer() {
 						fragment := make([]byte, nbyte)
 						copy(fragment, buf[:nbyte])
 						publishes <- fragment
+						log.Println("dispatching fragment")
 					}
 				}
 			}()
 		case deadConn := <-deadConns:
 			_ = deadConn.Close()
+			log.Println("connection closed...")
 			delete(conns, deadConn)
 		case publish := <-publishes:
 			for conn, _ := range conns {

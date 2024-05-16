@@ -9,6 +9,8 @@ require (
 	github.com/beevik/etree v1.3.0
 	github.com/dyninc/qstring v0.0.0-20160719172318-ab5840a88e81
 	github.com/go-redis/redis v6.15.9+incompatible
+	github.com/google/uuid v1.6.0
+	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d
 	github.com/pingcap/check v0.0.0-20200212061837-5e12011dc712
 	github.com/serdmanczyk/bifrost v0.0.0-20170920001845-329699e8005a
 	github.com/sethvargo/go-diceware v0.2.0
