@@ -46,12 +46,14 @@ func random(min, max int) int {
 func (s *Server) handleMessage() {
 	var buf [512]byte
 
-	n, addr, err := s.conn.ReadFromUDP(buf[0:])
+	n, addr, err := s.conn.ReadFromUDP(buf[:])
 	if err != nil {
 		return
 	}
+	fragment := make([]byte, n)
+	copy(fragment, buf[:n])
 
-	msg := string(buf[0:n])
+	msg := string(fragment)
 	m := s.parseMessage(msg)
 
 	if m.connectionStatus == cmd.LEAVING {
@@ -145,16 +147,19 @@ func main() {
 	//	go serve(pc, addr, buf[:n])
 	//}
 
-	s, err := net.ResolveUDPAddr("udp", fmt.Sprintf(":%d", *port))
+	addr, err := net.ResolveUDPAddr("udp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Fatal error:%s", err.Error())
 		os.Exit(1)
 	}
+
+	net.ListenPacket("udp", fmt.Sprintf(":%d", *port))
+
 	svc := &Server{
 		messages: make(chan string, 10),
 		clients:  make(map[*uuid.UUID]Client),
 	}
-	svc.conn, err = net.ListenUDP("udp", s)
+	svc.conn, err = net.ListenUDP("udp", addr)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Fatal error:%s", err.Error())
 		os.Exit(1)

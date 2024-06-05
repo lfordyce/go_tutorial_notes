@@ -184,7 +184,8 @@ func shortServer() {
 		for {
 			conn, err := listener.Accept()
 			if err != nil {
-				panic(err)
+				log.Printf("failed to accept connection: %s\n", err)
+				continue
 			}
 			newConns <- conn
 		}

@@ -12,6 +12,8 @@ import (
 	"time"
 )
 
+const space = "\x20"
+
 type Client struct {
 	connection          *net.UDPConn
 	alive               bool
