@@ -17,7 +17,7 @@ func TestLetterCombinations(t *testing.T) {
 
 	for _, tst := range cases {
 		t.Run(tst.desc, func(t *testing.T) {
-			out := letterCombinations(tst.input)
+			out := letterCombinationsAlt(tst.input)
 			fmt.Println(out)
 		})
 	}
